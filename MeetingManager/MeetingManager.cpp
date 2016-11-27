@@ -18,8 +18,8 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people);													//ai 명령어 처리 함수
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);		//ap 명령어 처리 함수
 bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people);
-//bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);
-//bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
+bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);
+bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool pg_printEveryPerson(vector<string>& words, unordered_map<string, Person>& people);
 //bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList);
@@ -72,6 +72,9 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	else if (words[0] == "pi") {
 		isQuit = pi_printPerson(words, people);
 	}
+	else if (words[0] == "pr") {
+		isQuit = pr_printRoom(words, roomList);
+	}
 	else {
 		cerr << "Wrong command\n";
 	}
@@ -94,16 +97,11 @@ inline bool isCmNum(vector<string>& words, int validNum)
 bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 {
 	int roomId;
-	if (isCmNum(words,2)) {
+	if (isCmNum(words, 2)) {
 		//roomId 해독 및 검사
-		try {
-			roomId = stoi(words[1]);
-			roomList.emplace(roomId, Room(roomId));
-			cout << "Room <" << roomId << "> (Added)\n";
-		}
-		catch (...) {
-			std::cerr << "Invalid Room ID. please use valid range, interger number " << endl;
-		}
+		roomId = stoi(words[1]);
+		roomList.emplace(roomId, Room(roomId));
+		cout << "Room <" << roomId << "> (Added)\n";
 	}
 	else {
 		cerr << "Invalid command : worng input number \n";
@@ -122,26 +120,21 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 	double startTime;
 	double endTime;
 	string topic;
-	if (isCmNum(words,6)) {
-		try {
-			roomId = stoi(words[1]);
-			day = words[2];
-			startTime = stod(words[3]);
-			endTime = stod(words[4]);
-			topic = words[5];
-			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
-			if (roomPtr == roomList.end()) {
-				cout << "There's no such room\n";
-				return false;
-			}
-			if (roomPtr->second.addMeeting(day, startTime, endTime, topic)) {
-				return false;
-			}
-			cout << "Meeting <" << roomId << "> <" << day << "> <" << startTime << "> <" << endTime << "> <" << topic << "> (added) \n";
+	if (isCmNum(words, 6)) {
+		roomId = stoi(words[1]);
+		day = words[2];
+		startTime = stod(words[3]);
+		endTime = stod(words[4]);
+		topic = words[5];
+		unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
+		if (roomPtr == roomList.end()) {
+			cout << "There's no such room\n";
+			return false;
 		}
-		catch (...) {
-			cerr << "";
+		if (roomPtr->second.addMeeting(day, startTime, endTime, topic)) {
+			return false;
 		}
+		cout << "Meeting <" << roomId << "> <" << day << "> <" << startTime << "> <" << endTime << "> <" << topic << "> (added) \n";
 	}
 	else {
 		cerr << "Invalid command : worng input number \n";
@@ -188,18 +181,53 @@ bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people
 }
 
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
-	if (isCmNum(words, 5)) {
-		int roomId = stoi(words[1]);
-		string day = words[2];
-		double time = stod(words[3]);
-		string name = words[4];
-		if (roomList.find(roomId)->second.getMeeting(day, time).addParticipation(people, name)) {
-			return false;	// 오류 발생
+	try {
+		if (isCmNum(words, 5)) {
+			int roomId = stoi(words[1]);
+			string day = words[2];
+			double time = stod(words[3]);
+			string name = words[4];
+			if (roomList.find(roomId)->second.getMeeting(day, time).addParticipation(people, name)) {
+				return false;	// 오류 발생
+				cout << "Participation <" << roomId << "> <" << day << "> <" << time << "> <" << name << "> (added) \n";
+			}
 		}
-		cout << "Participation <" << roomId << "> <" << day << "> <" << time << "> <" << name << "> (added) \n";
+		else {
+			cerr << "Invalid command : worng input number \n";
+		}
+	}
+	catch (runtime_error) {
+		;
+	}
+		
+	return false;
+}
+
+bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList)
+{
+	if (isCmNum(words, 2)) {
+		int roomId = stoi(words[1]);
+		unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
+		if (roomPtr == roomList.end()) {
+			cout << "There's no such room\n";
+			return false;
+		}
+		cout << "RoomId : " << roomId << endl;
+		cout << "\t<Meeting List>" << endl;
+		for (auto meetingPtr = roomPtr->second.getMeetingList().begin(); meetingPtr != roomPtr->second.getMeetingList().end();++meetingPtr) {
+			cout << "Meeting at <" << meetingPtr->second.getDay() << ">, From <" << meetingPtr->second.getStartTime() << "> to <" <<
+				meetingPtr->second.getEndTime() << ">" << endl;
+			cout << "  Topic : " << meetingPtr->second.getTopic() << "\n" << endl;
+		}
 	}
 	else {
 		cerr << "Invalid command : worng input number \n";
 	}
 	return false;
+}
+
+bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
+{
+
+
 }

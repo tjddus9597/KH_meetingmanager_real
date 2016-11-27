@@ -14,6 +14,7 @@ private:
 public:
 	Room(int roomid);
 	Meeting& getMeeting(string day, double starttime);
+	unordered_map<string, Meeting>& Room::getMeetingList();
 	bool addMeeting(string day, double starttime, double endtime, string topic);
 	void delMeeting(string day, double starttime);
 	~Room();

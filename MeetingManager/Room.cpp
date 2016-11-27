@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <string>
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 Room::Room(int roomId):
@@ -76,14 +77,13 @@ Meeting& Room::getMeeting(string day, double startTime)
 {
 	//meeting 존재 확인
 	if (m_meetingList.find(getMeetingId(day, startTime)) == m_meetingList.end()) {
-		throw "No meeting for such day, time is founded \n";
+		cout << "No such meeting exist" << endl;
+		throw runtime_error("nosuchroom");
 	}
 	//meeting 반환
 	else
 		return m_meetingList.find(getMeetingId(day, startTime))->second;
 }
-
-
 
 Room::~Room()
 {

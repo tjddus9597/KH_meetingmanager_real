@@ -129,7 +129,12 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 			startTime = stod(words[3]);
 			endTime = stod(words[4]);
 			topic = words[5];
-			if (roomList.find(roomId)->second.addMeeting(day, startTime, endTime, topic)) {
+			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
+			if (roomPtr == roomList.end()) {
+				cout << "There's no such room\n";
+				return false;
+			}
+			if (roomPtr->second.addMeeting(day, startTime, endTime, topic)) {
 				return false;
 			}
 			cout << "Meeting <" << roomId << "> <" << day << "> <" << startTime << "> <" << endTime << "> <" << topic << "> (added) \n";

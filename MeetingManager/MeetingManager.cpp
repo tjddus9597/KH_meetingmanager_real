@@ -181,7 +181,6 @@ bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people
 	}
 	return false;
 }
-}
 
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
 	if (isCmNum(words, 5)) {
@@ -198,4 +197,13 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 		cerr << "Invalid command : worng input number \n";
 	}
 	return false;
+}
+
+/* 
+di name: 특정 사람이 어떤 회의에도 참석하지 않았을 경우 삭제. 오류: 특정 이름에 해당하는 사람이 없을 때, 1개 이상 회의에 참석자일 때
+*/
+bool dI_delPerson(vector<string>& words, unordered_map<int, Room>& roomList) {
+	if (isCmNum(words, 2)) {
+
+	}
 }

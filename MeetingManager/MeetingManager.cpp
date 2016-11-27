@@ -15,7 +15,8 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 inline bool isCmNum(vector<string>& words, int validNum);																			//명령어 길이 확인 함수
 bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList);												 	    //ar 명령어 처리 함수
 bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList);													//am 명령어 처리 함수
-bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people);																			   //ai 명령어 처리 함수
+bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people);													//ai 명령어 처리 함수
+bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);		//ap 명령어 처리 함수
 //bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people);
 //bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
@@ -63,6 +64,12 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	}
 	else if (words[0] == "ai") {
 		isQuit = ai_insrtPerson(words, people);
+	}
+	else if (words[0] == "ap") {
+		isQuit = ap_insrtParticipation(words, roomList, people);
+	}
+	else {
+		return false;
 	}
 
 	return isQuit;
@@ -144,6 +151,23 @@ bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people
 			email = words[2];
 			people.emplace(name, Person(name, email));
 			cout << "Person <" << name << "> <" << email << "> (added)\n";
+	}
+	else {
+		cerr << "Invalid command : worng input number \n";
+	}
+	return false;
+}
+
+bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
+	if (isCmNum(words, 5)) {
+		int roomId = stoi(words[1]);
+		string day = words[2];
+		double time = stod(words[3]);
+		string name = words[4];
+		if (roomList.find(roomId)->second.getMeeting(day, time).addParticipation(people, name)) {
+			return false;	// 오류 발생
+		}
+		cout << "Participation <" << roomId << "> <" << day << "> <" << time << "> <" << name << "> (added) \n";
 	}
 	else {
 		cerr << "Invalid command : worng input number \n";

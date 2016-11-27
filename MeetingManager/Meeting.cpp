@@ -98,7 +98,3 @@ void Meeting::setStartTime(const double new_startTime) {
 void Meeting::setEndTime(const double new_endTime) {
 	m_endTime = new_endTime;
 }
-
-Meeting::~Meeting()
-{
-}

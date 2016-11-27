@@ -42,7 +42,7 @@ void Room::addMeeting(string day, double startTime, double endTime, string topic
 	}
 	//meeting 积己(meetingId 积己) 棺 m_meetingList俊 且寸
 	else {
-		Meeting newMeeting(day, startTime, endTime, topic, getMeetingId(day, startTime, endTime));
+		Meeting newMeeting(day, startTime, endTime, topic);
 		m_meetingList.emplace(getMeetingId(day, startTime, endTime), newMeeting);
 	}
 }

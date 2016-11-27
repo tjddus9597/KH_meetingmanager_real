@@ -68,7 +68,6 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	else if (words[0] == "ap") {
 		isQuit = ap_insrtParticipation(words, roomList, people);
 	}
-
 	else if (words[0] == "pi") {
 		isQuit = pi_printPerson(words, people);
 	}
@@ -91,6 +90,49 @@ inline bool isCmNum(vector<string>& words, int validNum)
 	else {
 		return false;
 	}
+}
+
+bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people)
+{
+	if (isCmNum(words, 2)) {
+		string name;
+		name = words[1];
+		auto thisPerson = people.find(name);
+		if (thisPerson != people.end()) {
+			cout << "Name : " << thisPerson->second.getName() << "\n";
+			cout << "Email : " << thisPerson->second.getEmail() << "\n";
+		}
+		else {
+			cout << "There no such person \n";
+		}
+	}
+	else {
+		cerr << "Incalid command : worng input number \n";
+	}
+	return false;
+}
+
+bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList)
+{
+	if (isCmNum(words, 2)) {
+		int roomId = stoi(words[1]);
+		unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
+		if (roomPtr == roomList.end()) {
+			cout << "There's no such room\n";
+			return false;
+		}
+		cout << "RoomId : " << roomId << endl;
+		cout << "\t<Meeting List>" << endl;
+		for (auto meetingPtr = roomPtr->second.getMeetingList().begin(); meetingPtr != roomPtr->second.getMeetingList().end(); ++meetingPtr) {
+			cout << "Meeting at <" << meetingPtr->second.getDay() << ">, From <" << meetingPtr->second.getStartTime() << "> to <" <<
+				meetingPtr->second.getEndTime() << ">" << endl;
+			cout << "  Topic : " << meetingPtr->second.getTopic() << "\n" << endl;
+		}
+	}
+	else {
+		cerr << "Invalid command : worng input number \n";
+	}
+	return false;
 }
 
 //방 추가 명령어 함수
@@ -160,26 +202,6 @@ bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people
 	return false;
 }
 
-bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people)
-{
-	if (isCmNum(words, 2)) {
-		string name;
-		name = words[1];
-		auto thisPerson = people.find(name);
-		if (thisPerson != people.end()) {
-			cout << "Name : " << thisPerson->second.getName() << "\n";
-			cout << "Email : " << thisPerson->second.getEmail() << "\n";
-		}
-		else {
-			cout << "There no such person \n";
-		}
-	}
-	else {
-		cerr << "Incalid command : worng input number \n";
-	}
-	return false;
-}
-
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
 	try {
 		if (isCmNum(words, 5)) {
@@ -203,25 +225,3 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 	return false;
 }
 
-bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList)
-{
-	if (isCmNum(words, 2)) {
-		int roomId = stoi(words[1]);
-		unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
-		if (roomPtr == roomList.end()) {
-			cout << "There's no such room\n";
-			return false;
-		}
-		cout << "RoomId : " << roomId << endl;
-		cout << "\t<Meeting List>" << endl;
-		for (auto meetingPtr = roomPtr->second.getMeetingList().begin(); meetingPtr != roomPtr->second.getMeetingList().end();++meetingPtr) {
-			cout << "Meeting at <" << meetingPtr->second.getDay() << ">, From <" << meetingPtr->second.getStartTime() << "> to <" <<
-				meetingPtr->second.getEndTime() << ">" << endl;
-			cout << "  Topic : " << meetingPtr->second.getTopic() << "\n" << endl;
-		}
-	}
-	else {
-		cerr << "Invalid command : worng input number \n";
-	}
-	return false;
-}

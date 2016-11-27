@@ -18,13 +18,13 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people);													//ai 명령어 처리 함수
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);		//ap 명령어 처리 함수
 bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people);
-bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);
-bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
+//bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);
+//bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool pg_printEveryPerson(vector<string>& words, unordered_map<string, Person>& people);
 //bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList);
 bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);				//di 명령어 처리 함수
-
+bool dr_delRoom(vector<string>& words, unordered_map<int, Room>& roomList);															//dr 명령어 처리 함수
 
 using namespace std;
 int main()
@@ -72,11 +72,14 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	else if (words[0] == "pi") {
 		isQuit = pi_printPerson(words, people);
 	}
-	else if (words[0] == "pr") {
-		isQuit = pr_printRoom(words, roomList);
-	}
+	//else if (words[0] == "pr") {
+	//	isQuit = pr_printRoom(words, roomList);
+	//}
 	else if (words[0] == "di") {
 		isQuit = di_delPerson(words, roomList, people);
+	}
+	else if (words[0] == "dr") {
+		isQuit = dr_delRoom(words, roomList);
 	}
 	else {
 		cerr << "Wrong command\n";
@@ -244,4 +247,30 @@ bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, uno
 	else {
 		cerr << "Invalid command : wrong input number \n" << endl;
 	}
+	return false;
+}
+
+/*
+dr room: 특정 방번호 회의실과 그 방에 있는 모든 회의를 삭제. 오류: 방번호가 범위를 벗어났을 때, 방번호에 해당하는 회의실이 없을 때
+*/
+
+bool dr_delRoom(vector<string>& words, unordered_map<int, Room>& roomList) {
+	if (isCmNum(words, 2)) {
+		int roomId = stoi(words[1]);
+		auto roomPtr = roomList.find(roomId);
+		if (roomPtr != roomList.end())  {	//roomList에 방번호가 roomId인 방이 존재하면
+			if (!roomPtr->second.getMeetingList().empty()) {	//방에 meeting이 존재하면
+				roomPtr->second.getMeetingList().clear();
+			}
+			roomList.erase(roomId);
+			cout << "Room <" << roomId << "> (deleted) \n";
+		}
+		else {
+			cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
+		}
+	}
+	else {
+		cerr << "Invalid command : wrong input number \n" << endl;
+	}
+	return false;
 }

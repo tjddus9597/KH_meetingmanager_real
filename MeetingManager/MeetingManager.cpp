@@ -186,7 +186,6 @@ bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people
 	}
 	return false;
 }
-}
 
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
 	if (isCmNum(words, 5)) {

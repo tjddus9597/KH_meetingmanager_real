@@ -4,8 +4,7 @@
 #include<string>
 #include "Person.h"
 using namespace std;
-/*성연 code와 호환성 검사용
-*/
+
 using namespace std;
 class Meeting
 {
@@ -15,7 +14,7 @@ private:
 	string m_day;
 	double m_startTime;
 	double m_endTime;
-public: //디버깅용
+public: 
 	Meeting(string day_, double startTime_, double endTime_, string topic_);
 	bool Meeting::isPerson(string name);
 	void addParticipation(unordered_map<string, Person>& People, string name);

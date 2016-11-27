@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Person.h"
 #include <string>
-
 Person::Person() {}
 
 Person::Person(string name_, string email_) {

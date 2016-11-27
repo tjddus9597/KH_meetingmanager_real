@@ -17,7 +17,7 @@ bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList);			
 bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList);													//am 명령어 처리 함수
 bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people);													//ai 명령어 처리 함수
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);		//ap 명령어 처리 함수
-//bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people);
+bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people);
 //bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
@@ -51,7 +51,7 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	vector<string> words{ istream_iterator<string> {is},istream_iterator<string> {} }; 	//명령어 토큰화
 
 	
-	bool isQuit;
+	bool isQuit = false;
 	//명령어 해석 및 실행
 	if (words[0] == "qq") {
 		isQuit = true;
@@ -68,8 +68,12 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	else if (words[0] == "ap") {
 		isQuit = ap_insrtParticipation(words, roomList, people);
 	}
+
+	else if (words[0] == "pi") {
+		isQuit = pi_printPerson(words, people);
+	}
 	else {
-		return false;
+		cerr << "Wrong command\n";
 	}
 
 	return isQuit;
@@ -156,6 +160,27 @@ bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people
 		cerr << "Invalid command : worng input number \n";
 	}
 	return false;
+}
+
+bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people)
+{
+	if (isCmNum(words, 2)) {
+		string name;
+		name = words[1];
+		auto thisPerson = people.find(name);
+		if (thisPerson != people.end()) {
+			cout << "Name : " << thisPerson->second.getName() << "\n";
+			cout << "Email : " << thisPerson->second.getEmail() << "\n";
+		}
+		else {
+			cout << "There no such person \n";
+		}
+	}
+	else {
+		cerr << "Incalid command : worng input number \n";
+	}
+	return false;
+}
 }
 
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {

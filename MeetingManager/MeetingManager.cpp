@@ -225,9 +225,3 @@ bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 	}
 	return false;
 }
-
-bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
-{
-
-
-}

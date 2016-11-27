@@ -99,6 +99,49 @@ inline bool isCmNum(vector<string>& words, int validNum)
 	}
 }
 
+bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people)
+{
+	if (isCmNum(words, 2)) {
+		string name;
+		name = words[1];
+		auto thisPerson = people.find(name);
+		if (thisPerson != people.end()) {
+			cout << "Name : " << thisPerson->second.getName() << "\n";
+			cout << "Email : " << thisPerson->second.getEmail() << "\n";
+		}
+		else {
+			cout << "There no such person \n";
+		}
+	}
+	else {
+		cerr << "Incalid command : worng input number \n";
+	}
+	return false;
+}
+
+bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList)
+{
+	if (isCmNum(words, 2)) {
+		int roomId = stoi(words[1]);
+		unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
+		if (roomPtr == roomList.end()) {
+			cout << "There's no such room\n";
+			return false;
+		}
+		cout << "RoomId : " << roomId << endl;
+		cout << "\t<Meeting List>" << endl;
+		for (auto meetingPtr = roomPtr->second.getMeetingList().begin(); meetingPtr != roomPtr->second.getMeetingList().end(); ++meetingPtr) {
+			cout << "Meeting at <" << meetingPtr->second.getDay() << ">, From <" << meetingPtr->second.getStartTime() << "> to <" <<
+				meetingPtr->second.getEndTime() << ">" << endl;
+			cout << "  Topic : " << meetingPtr->second.getTopic() << "\n" << endl;
+		}
+	}
+	else {
+		cerr << "Invalid command : worng input number \n";
+	}
+	return false;
+}
+
 //방 추가 명령어 함수
 bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 {
@@ -162,26 +205,6 @@ bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people
 	}
 	else {
 		cerr << "Invalid command : wrong input number \n";
-	}
-	return false;
-}
-
-bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people)
-{
-	if (isCmNum(words, 2)) {
-		string name;
-		name = words[1];
-		auto thisPerson = people.find(name);
-		if (thisPerson != people.end()) {
-			cout << "Name : " << thisPerson->second.getName() << "\n";
-			cout << "Email : " << thisPerson->second.getEmail() << "\n";
-		}
-		else {
-			cout << "There no such person \n";
-		}
-	}
-	else {
-		cerr << "Incalid command : wrong input number \n";
 	}
 	return false;
 }

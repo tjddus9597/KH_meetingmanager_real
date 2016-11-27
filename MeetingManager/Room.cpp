@@ -15,9 +15,9 @@ Room::Room(int roomId):
 /*meeting 아이디를 계산한다.
 * 이는 meetingList의 key값으로 활용된다.
 */
-string Room::getMeetingId(string day, double startTime, double endTime)
+string Room::getMeetingId(string day, double startTime)
 {
-	return day + "_" + to_string(startTime) + "_" + to_string(endTime);
+	return day + "_" + to_string(startTime);
 }
 
 /*해당 시간 구간에 meeting이 존재하는지를 검사한다.
@@ -45,7 +45,7 @@ bool Room::addMeeting(string day, double startTime, double endTime, string topic
 	//meeting 생성(meetingId 생성) 및 m_meetingList에 할당
 	else {
 		Meeting newMeeting(day, startTime, endTime, topic);
-		m_meetingList.emplace(getMeetingId(day, startTime, endTime), newMeeting);
+		m_meetingList.emplace(getMeetingId(day, startTime), newMeeting);
 		cerr << "미팅 생성\n";
 		return false;
 	}
@@ -54,29 +54,29 @@ bool Room::addMeeting(string day, double startTime, double endTime, string topic
 /*meeting을 삭제한다. 
 * 해당 meeting이 존재하는지 확인한다.
 */
-void Room::delMeeting(string day, double startTime, double endTime)
+void Room::delMeeting(string day, double startTime)
 {
 	//meeting 존재 확인
-	if (m_meetingList.find(getMeetingId(day, startTime, endTime)) == m_meetingList.end()) {
+	if (m_meetingList.find(getMeetingId(day, startTime)) == m_meetingList.end()) {
 		throw "No meeting for such day, time is founded \n";
 	}
 	//meeting 삭제
 	else
-		m_meetingList.erase(getMeetingId(day, startTime, endTime));
+		m_meetingList.erase(getMeetingId(day, startTime));
 }
 
 /*해당하는 meeting을 반환한다. 
 * 해당 meeting이 존재하는지 확인한다.
 */
-Meeting& Room::getMeeting(string day, double startTime, double endTime)
+Meeting& Room::getMeeting(string day, double startTime)
 {
 	//meeting 존재 확인
-	if (m_meetingList.find(getMeetingId(day, startTime, endTime)) == m_meetingList.end()) {
+	if (m_meetingList.find(getMeetingId(day, startTime)) == m_meetingList.end()) {
 		throw "No meeting for such day, time is founded \n";
 	}
 	//meeting 반환
 	else
-		return m_meetingList.find(getMeetingId(day, startTime, endTime))->second;
+		return m_meetingList.find(getMeetingId(day, startTime))->second;
 }
 
 Room::~Room()

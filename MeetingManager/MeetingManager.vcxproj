@@ -154,7 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="Meeting.cpp" />
     <ClCompile Include="MeetingManager.cpp" />
+    <ClCompile Include="Person.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

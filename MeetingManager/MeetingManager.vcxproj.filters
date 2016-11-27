@@ -53,5 +53,11 @@
     <ClCompile Include="Command.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Meeting.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Person.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

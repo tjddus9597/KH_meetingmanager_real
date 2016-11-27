@@ -65,6 +65,10 @@ void Room::delMeeting(string day, double startTime)
 		m_meetingList.erase(getMeetingId(day, startTime));
 }
 
+unordered_map<string, Meeting>& Room::getMeetingList() {
+	return m_meetingList;
+}
+
 /*해당하는 meeting을 반환한다. 
 * 해당 meeting이 존재하는지 확인한다.
 */
@@ -78,6 +82,8 @@ Meeting& Room::getMeeting(string day, double startTime)
 	else
 		return m_meetingList.find(getMeetingId(day, startTime))->second;
 }
+
+
 
 Room::~Room()
 {

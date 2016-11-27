@@ -13,6 +13,7 @@ private:
 	bool isMeeting(string day, double starttime, double endtime);
 public:
 	Room(int roomid);
+	unordered_map<string, Meeting>& getMeetingList();
 	Meeting& getMeeting(string day, double starttime);
 	bool addMeeting(string day, double starttime, double endtime, string topic);
 	void delMeeting(string day, double starttime);

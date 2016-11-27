@@ -10,6 +10,7 @@ private:
 	string email;
 
 public:
+	Person();
 	Person(string name_, string email_);
 	string getName() const;
 	string getEmail() const;

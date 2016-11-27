@@ -14,7 +14,7 @@ private:
 public:
 	Room(int roomid);
 	Meeting& getMeeting(string day, double starttime, double endtime);
-	void addMeeting(string day, double starttime, double endtime, string topic);
+	bool addMeeting(string day, double starttime, double endtime, string topic);
 	void delMeeting(string day, double starttime, double endtime);
 	~Room();
 };

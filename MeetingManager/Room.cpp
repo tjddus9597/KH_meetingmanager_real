@@ -25,8 +25,9 @@ string Room::getMeetingId(string day, double startTime, double endTime)
 bool Room::isMeeting(string day, double startTime, double endTime)
 {
 	for (auto it = m_meetingList.begin(); it != m_meetingList.end(); ++it) {
-		if (day != it->second.getDay() && (startTime < it->second.getEndTime()) && (endTime > it->second.getStartTime()))
+		if (!((day != it->second.getDay()) && (startTime > it->second.getEndTime()) && (endTime < it->second.getStartTime()))) {
 			return true;
+		}
 	}
 	return false;
 }
@@ -34,16 +35,19 @@ bool Room::isMeeting(string day, double startTime, double endTime)
 /*meeting을 추가한다.
 * 시간이 겹치는지 확인이 필요하다.
 */
-void Room::addMeeting(string day, double startTime, double endTime, string topic)
+bool Room::addMeeting(string day, double startTime, double endTime, string topic)
 {	
 	//meeting 시간 겹치는지 확인
 	if (isMeeting(day,startTime,endTime)) {
 		cerr << "There is other meeting at this time \n";
+		return true;//이미 미팅이 있다면 true
 	}
 	//meeting 생성(meetingId 생성) 및 m_meetingList에 할당
 	else {
-		Meeting newMeeting(day, startTime, endTime, topic, getMeetingId(day, startTime, endTime));
+		Meeting newMeeting(day, startTime, endTime, topic);
 		m_meetingList.emplace(getMeetingId(day, startTime, endTime), newMeeting);
+		cerr << "미팅 생성\n";
+		return false;
 	}
 }
 

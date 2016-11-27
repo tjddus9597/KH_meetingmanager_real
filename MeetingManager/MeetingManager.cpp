@@ -10,40 +10,34 @@
 #include<sstream>
 #include<stdexcept>
 
-bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Meeting>& meetingList, unordered_map<string, Person>& people,
-	unordered_map<string, bool(*)(vector<string>&, unordered_map<int, Room>&, unordered_map<string, Meeting>&, unordered_map<string, Person>&)>& commandList);
+bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
+
 inline bool isCmNum(vector<string>& words, int validNum);																			//명령어 길이 확인 함수
-bool qq_quit(vector<string>&, unordered_map<int, Room>&, unordered_map<string, Meeting>&, unordered_map<string, Person>&); //qq 명령어 처리 함수
-bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Meeting>& meetingList
-	, unordered_map<string, Person>& people);																		   //ar 명령어 처리 함수
-bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Meeting>& meetingList
-	, unordered_map<string, Person>& people);																		   //am 명령어 처리 함수
-bool ai_insrtPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Meeting>& meetingList
-, unordered_map<string, Person>& people);																			   //ai 명령어 처리 함수
+bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList);												 	    //ar 명령어 처리 함수
+bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList);													//am 명령어 처리 함수
+bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people);																			   //ai 명령어 처리 함수
+//bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people);
+//bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);
+//bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
+//bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
+//bool pg_printEveryPerson(vector<string>& words, unordered_map<string, Person>& people);
+//bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList);
+
 
 using namespace std;
 int main()
 {
 	unordered_map<int,Room> roomList;
-	unordered_map<string, Meeting> meetingList;
 	unordered_map<string, Person> people;
-	unordered_map<string, bool(*)(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Meeting>& meetingList,
-		unordered_map<string, Person>& people)> commandList;
-	
-	//commandList에 항목 만들기 대입
-	commandList.emplace("qq",qq_quit);
-	commandList.emplace("ar", ar_insrtRoom);
-	commandList.emplace("am", am_insrtMeeting);
-	commandList.emplace("ai", ai_insrtPerson);
 
 	cout << "-------------------Start Scheduling-------------------\n\n";
 	
-	do {		
-	} while(!simulation(roomList,meetingList,people,commandList));
+	do {
+
+	} while(!simulation(roomList,people));
 }
 
-bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Meeting>& meetingList, unordered_map<string, Person>& people,
-	unordered_map<string, bool(*)(vector<string>&, unordered_map<int, Room>&, unordered_map<string, Meeting>&, unordered_map<string, Person>&)>& commandList)
+bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person>& people)
 {
 	//명령어 입력
 	string command;
@@ -57,16 +51,20 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Meetin
 
 	
 	bool isQuit;
-	auto iter = commandList.find(words[0]); //명령어 해석
-	
-	
-	if (iter != commandList.end()) {
-		isQuit = (iter->second)(words, roomList, meetingList, people);		//명령어 함수 실행
+	//명령어 해석 및 실행
+	if (words[0] == "qq") {
+		isQuit = true;
 	}
-	else {
-		cerr << "Invalid command \n";
-		return false;
+	else if(words[0] == "ar"){
+		isQuit = ar_insrtRoom(words, roomList);
 	}
+	else if (words[0] == "am") {
+		isQuit = am_insrtMeeting(words, roomList);
+	}
+	else if (words[0] == "ai") {
+		isQuit = ai_insrtPerson(words, people);
+	}
+
 	return isQuit;
 }
 
@@ -81,20 +79,8 @@ inline bool isCmNum(vector<string>& words, int validNum)
 	}
 }
 
-//종료 명령어 함수
-bool qq_quit(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Meeting>& meetingList, unordered_map<string, Person>& people)
-{
-	if (isCmNum(words,1)) {
-		return true;
-	}
-	else {
-		cerr << "Invalid command \n";
-		return false;
-	}
-}
-
-//방 추가 함수
-bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Meeting>& meetingList, unordered_map<string, Person>& people)
+//방 추가 명령어 함수
+bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 {
 	int roomId;
 	if (isCmNum(words,2)) {
@@ -118,8 +104,7 @@ bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList, uno
 
 
 //회의 추가 함수 : 현재 오류 수정중
-bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Meeting>& meetingList
-	, unordered_map<string, Person>& people)
+bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 {
 	int roomId;
 	string day;
@@ -133,11 +118,13 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList, 
 			startTime = stod(words[3]);
 			endTime = stod(words[4]);
 			topic = words[5];
-			roomList.find(roomId)->second.addMeeting(day, startTime, endTime, topic);
+			if (roomList.find(roomId)->second.addMeeting(day, startTime, endTime, topic)) {
+				return false;
+			}
 			cout << "Meeting <" << roomId << "> <" << day << "> <" << startTime << "> <" << endTime << "> <" << topic << "> (added) \n";
 		}
 		catch (...) {
-			cerr << "Invalid Input. Check if :\n1) Room ID is valid-range integer\n2)start time is valid-range number\n3)end time is valid-range number\n4)Input order\n\n";
+			cerr << "";
 		}
 	}
 	else {
@@ -148,8 +135,7 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList, 
 }
 
 //사람 추가 함수
-bool ai_insrtPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Meeting>& meetingList
-	, unordered_map<string, Person>& people)
+bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people)
 {
 	if (isCmNum(words, 3)) {
 			string name;

@@ -61,12 +61,17 @@ void Meeting::delParticiaption(string name)
 Person& Meeting::getParticipation(string name)
 {
 	//Person 존재 확인
-	if (isPerson(name))
+	if (isPerson(name)) {
 		cerr << "이름이 " << name << " 인 Person이 존재 하지 않습니다." << endl;
+	}
 	//Person 반환
 	else
 		return m_Participation[name];
 	
+}
+
+unordered_map<string, Person>& Meeting::getParticipation() {
+	return m_Participation;
 }
 
 string Meeting::getTopic() const {

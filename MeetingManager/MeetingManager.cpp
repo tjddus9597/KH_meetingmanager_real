@@ -23,6 +23,7 @@ bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool pg_printEveryPerson(vector<string>& words, unordered_map<string, Person>& people);
 //bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList);
+bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);				//di 명령어 처리 함수
 
 
 using namespace std;
@@ -73,6 +74,9 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	}
 	else if (words[0] == "pr") {
 		isQuit = pr_printRoom(words, roomList);
+	}
+	else if (words[0] == "di") {
+		isQuit = di_delPerson(words, roomList, people);
 	}
 	else {
 		cerr << "Wrong command\n";
@@ -146,7 +150,7 @@ bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 		cout << "Room <" << roomId << "> (Added)\n";
 	}
 	else {
-		cerr << "Invalid command : worng input number \n";
+		cerr << "Invalid command : wrong input number \n";
 	}
 
 	return false; //다시 명령어 입력 받음
@@ -179,7 +183,7 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 		cout << "Meeting <" << roomId << "> <" << day << "> <" << startTime << "> <" << endTime << "> <" << topic << "> (added) \n";
 	}
 	else {
-		cerr << "Invalid command : worng input number \n";
+		cerr << "Invalid command : wrong input number \n";
 	}
 
 	return false; //다시 명령어 입력 받음
@@ -197,7 +201,7 @@ bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people
 			cout << "Person <" << name << "> <" << email << "> (added)\n";
 	}
 	else {
-		cerr << "Invalid command : worng input number \n";
+		cerr << "Invalid command : wrong input number \n";
 	}
 	return false;
 }
@@ -209,7 +213,12 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 			string day = words[2];
 			double time = stod(words[3]);
 			string name = words[4];
-			if (roomList.find(roomId)->second.getMeeting(day, time).addParticipation(people, name)) {
+			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
+			if (roomPtr == roomList.end()) {
+				cout << "There's no such room\n";
+				return false;
+			}
+			if (roomPtr->second.getMeeting(day, time).addParticipation(people, name)) {
 				return false;	// 오류 발생
 				cout << "Participation <" << roomId << "> <" << day << "> <" << time << "> <" << name << "> (added) \n";
 			}
@@ -225,3 +234,37 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 	return false;
 }
 
+/* 
+di name: 특정 사람이 어떤 회의에도 참석하지 않았을 경우 삭제. 오류: 특정 이름에 해당하는 사람이 없을 때, 1개 이상 회의에 참석자일 때
+*/
+bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
+	if (isCmNum(words, 2)) {
+		string name = words[1];
+		if (people.find(name) != people.end()) {	// people 안에 이름이 name인 person이 존재하면
+			if (roomList.size() == 0) {
+				people.erase(name);
+				cout << "Person <" << name << "> (deleted) \n";
+			}
+			else {
+				for (auto roomPtr = roomList.begin(); roomPtr != roomList.end(); roomPtr++) {
+					for (auto meetingPtr = roomPtr->second.getMeetingList().begin(); meetingPtr != roomPtr->second.getMeetingList().end(); meetingPtr++) {
+						auto PersonList = meetingPtr->second.getParticipation();
+						if (PersonList.find(name) == PersonList.end()) {	// 어떤 회의에도 참석하지 않았을 경우
+							people.erase(name);
+							cout << "Person <" << name << "> (deleted) \n";
+						}
+						else {
+							cout << name << " 은 회의에 참석 중입니다." << endl;
+						}
+					}
+				}
+			}
+		}
+		else {
+			cerr << "이름이 " << name << " 인 Person이 People안에 존재 하지 않습니다." << endl;
+		}
+	}
+	else {
+		cerr << "Invalid command : wrong input number \n" << endl;
+	}
+}

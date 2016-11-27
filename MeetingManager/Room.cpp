@@ -25,7 +25,7 @@ string Room::getMeetingId(string day, double startTime)
 bool Room::isMeeting(string day, double startTime, double endTime)
 {
 	for (auto it = m_meetingList.begin(); it != m_meetingList.end(); ++it) {
-		if (!((day != it->second.getDay()) && (startTime > it->second.getEndTime()) && (endTime < it->second.getStartTime()))) {
+		if (!((day != it->second.getDay()) || (startTime >= it->second.getEndTime()) || (endTime <= it->second.getStartTime()))) {
 			return true;
 		}
 	}

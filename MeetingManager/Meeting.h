@@ -17,7 +17,7 @@ private:
 public: 
 	Meeting(string day_, double startTime_, double endTime_, string topic_);
 	bool Meeting::isPerson(string name);
-	void addParticipation(unordered_map<string, Person>& People, string name);
+	bool addParticipation(unordered_map<string, Person>& People, string name);
 	Person& getParticipation(string name);
 	void delParticiaption(string name);
 	string getTopic() const;

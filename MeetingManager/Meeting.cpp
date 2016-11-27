@@ -21,21 +21,23 @@ bool Meeting::isPerson(string name)
 	return false;
 }
 
-void Meeting::addParticipation(unordered_map<string, Person>& People, string name) {
+bool Meeting::addParticipation(unordered_map<string, Person>& People, string name) {
 	
 	if (People.find(name) != People.end()) // People 안에 이름이 name인 Person이 존재하면(추가할 수 있다)
 	{
 		if (isPerson(name))	// Participation 안에 이름이 name인 Person이 이미 존재하면
 		{
 			cerr << "Participation 안에 "<< "이름이 " << name << " 인 Person이 이미 존재합니다." << endl;
-
+			return true;	//오류 발생
 		}
 		else {
 			m_Participation.emplace(name, People.find(name)->second);
+			return false;	//오류 없음
 		}
 	}
 	else {
 		cerr << "People 안에 " << "이름이 " << name << " 인 Person이 존재 하지 않습니다." << endl;
+		return true;	// 오류 발생
 	}
 }
 

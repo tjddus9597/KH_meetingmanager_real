@@ -9,6 +9,7 @@
 #include<iterator>
 #include<sstream>
 #include<stdexcept>
+#include<fstream>
 
 bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 
@@ -30,6 +31,8 @@ bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomLi
 bool ds_delAllMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool dg_delAllPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 bool da_deleteAll(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
+bool sd_saveFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
+bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 
 using namespace std;
 
@@ -113,6 +116,12 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	}
 	else if (words[0] == "da") {
 		isQuit = da_deleteAll(words, roomList, people);
+	}
+	else if (words[0] == "sd") {
+		isQuit = sd_saveFile(words, roomList, people);
+	}
+	else if (words[0] == "ld") {
+		isQuit = ld_loadFile(words, roomList, people);
 	}
 	else {
 		cerr << "Wrong command\n";
@@ -210,7 +219,7 @@ bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomL
 			meetingNum += roomElements.second.getMeetingList().size();
 		}
 		if (meetingNum == 0) {
-			cout << "No meeting Exist" << endl;
+			cout << "No Meeting Exist" << endl;
 			return false;
 		}
 		for (auto& roomElement : roomList) {
@@ -568,6 +577,99 @@ bool da_deleteAll(vector<string>& words, unordered_map<int, Room>& roomList, uno
 	if (isCmNum(words, 1)) {
 		roomList.clear();	// 모든 회의실, 회의 삭제
 		people.clear();		// 모든 개인 삭제
+		cout << "All data deleted" << endl;
+	}
+	else {
+		cerr << "Invalid command : wrong input number \n";
+	}
+	return false;
+}
+
+/*sd filename: 현재 회의실, 사람, 회의에 관한 정보를 파일에 저장. 오류: 파일이름에 해당하는 파일이 열리지 않을 때*/
+
+bool sd_saveFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
+	if (isCmNum(words, 2)) {
+		string filename = words[1]+".txt";
+		ofstream os(filename);
+
+		//사람 정보 출력
+		cout << "[Person]" << endl;
+		os << "[Person]" << endl;
+		if (people.size() == 0) {
+			cout << "No person added" << endl;
+			os << "No person added" << endl;
+		}
+		else {
+			for (auto& personElement : people) {
+				cout << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
+				os << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
+			}
+		}
+		//회의실 정보 출력
+		if (roomList.size() == 0)
+		{
+			cout << "[Room]" << endl;
+			cout << "No Room Exist" << endl;
+			os << "[Room]" << endl;
+			os << "No Room Exist" << endl;
+			return false;
+		}
+		for (auto& roomElement : roomList) {
+			cout << "[Room " << roomElement.second.getRoomId() << "]" << endl;
+			os << "[Room " << roomElement.second.getRoomId() << "]" << endl;
+		//회의 정보 출력
+			if (roomElement.second.getMeetingList().size() == 0) {
+				cout << "No Meeting Exist" << endl;
+				os << "No Meeting Exist" << endl;
+			}
+			else {
+				for (auto& meetingElement : roomElement.second.getMeetingList()) {
+					cout << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << " " << meetingElement.second.getEndTime() <<
+						" " << meetingElement.second.getTopic() << endl;
+					os << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << " " << meetingElement.second.getEndTime() <<
+						" " << meetingElement.second.getTopic() << endl;
+					unordered_map<string, Person>& parList = meetingElement.second.getParticipation();
+					for (auto& personElement : parList) {
+						cout << ": " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
+						os << ": " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
+					}
+				}
+			}
+		}
+	}
+	else {
+		cerr << "Invalid command : wrong input number \n";
+	}
+	return false;
+}
+
+bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
+	if (isCmNum(words, 2)) {
+		string filename = words[1] + ".txt";
+		string command;
+		ifstream is(filename);
+		vector<pair<string, vector<string>>> lines;
+		while (!is.eof()) {
+			getline(is, command);
+			istringstream is{ command };
+			vector<string> words{ istream_iterator<string> {is},istream_iterator<string> {} }; 	//명령어 토큰화
+			lines.push_back({ command,words });
+		}
+
+		vector<pair<string, vector<string>>> ::iterator linesPtr = lines.begin();
+		int num = 0;
+		//for (auto& lineElement : lines)
+		//	cout << lineElement.first << endl;
+	
+		if (lines[1].first.compare("No person added") != 0) {
+			// 2번째 줄이 "No person added" 이 아닌경우
+			for (linesPtr++; linesPtr->second[0].compare("[Room") != 0; linesPtr++) {
+				string name = linesPtr->second[0];
+				string email = linesPtr->second[1];
+				vector<string> words{"ai",name,email};
+				ai_insrtPerson(words, people);
+			}
+		}
 	}
 	else {
 		cerr << "Invalid command : wrong input number \n";

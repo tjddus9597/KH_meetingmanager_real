@@ -26,6 +26,7 @@ bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);
 bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);				//di 명령어 처리 함수
 bool dr_delRoom(vector<string>& words, unordered_map<int, Room>& roomList);															//dr 명령어 처리 함수
 bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
+bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomList);
 
 using namespace std;
 int main()
@@ -84,6 +85,9 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	}
 	else if (words[0] == "dm") {
 		isQuit = dm_delMeeting(words, roomList);
+	}
+	else if (words[0] == "dp") {
+		isQuit = dp_delParticipation(words, roomList);
 	}
 	else {
 		cerr << "Wrong command\n";
@@ -318,7 +322,45 @@ bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList) {
 				cout << "Meeting <" << roomId << "> <" << day << "> <" << time << "> (deleted) \n";
 			}
 			else {
-				cerr << "회의가 존재하지 않습니다." << endl;
+				cerr << roomId << " 방에 Day: " << day << " Time: " << time << " 에 회의가 존재하지 않습니다." << endl;
+			}
+		}
+		else {
+			cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
+		}
+	}
+	else {
+		cerr << "Invalid command : wrong input number \n";
+	}
+	return false;
+}
+
+/*dp room day time name: 특정 사람을 미팅 참석자에서 삭제. 
+오류: 방번호 범위가 벗어날 때, 방번호에 해당하는 회의실이 없을 때,
+특정시간에 회의가 없을 때, 특정 사람이 회의 참석자가 아닐 때*/
+
+bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomList) {
+	if (isCmNum(words, 5)) {
+		int roomId = stoi(words[1]);
+		string day = words[2];
+		double time = stod(words[3]);
+		string name = words[4];
+		auto roomPtr = roomList.find(roomId);
+		if (roomPtr != roomList.end()) {									// roomList에 방번호가 roomId인 방이 존재하면
+			auto meetingList = roomPtr->second.getMeetingList();			// 미팅리스트
+			auto meetingId = roomPtr->second.getMeetingId(day, time);
+			if (meetingList.find(meetingId) != meetingList.end()) {			// 특정 시간에 회의가 있다면
+				auto participation = meetingList.find(meetingId)->second.getParticipation();
+				if (participation.find(name) != participation.end()) {		// 이름이 name인 participation이 있다면
+					participation.erase(name);
+					cout << "Participation <" << roomId << "> <" << day << "> <" << time << "> <" << name << "> (deleted) \n";
+				}
+				else {
+					cerr << "이름이 " << name << " 인 Participation이 존재하지 않습니다." << endl;
+				}
+			}
+			else {
+				cerr << roomId<< " 방에 Day: "<< day << " Time: " << time << " 에 회의가 존재하지 않습니다." << endl;
 			}
 		}
 		else {

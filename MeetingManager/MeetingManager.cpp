@@ -362,7 +362,7 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 	catch (runtime_error) {
 		;
 	}
-	catch (runtime_error) {
+	catch (out_of_range) {
 		cerr << "Room ID out of range" << endl;
 	}
 		

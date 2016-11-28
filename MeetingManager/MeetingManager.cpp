@@ -12,9 +12,11 @@
 
 bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 
-inline bool isCmNum(vector<string>& words, int validNum);																			//명령어 길이 확인 함수
+inline bool isCmNum(vector<string>& words, int validNum);																		//명령어 길이 확인 함수
+bool qq_Quit(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList);												 	    //ar 명령어 처리 함수
 bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList);													//am 명령어 처리 함수
+bool am_insrtMeeting(int roomId_, string day_, double startTime_, double endTime_, string topic_, unordered_map<int, Room>& roomList);
 bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people);													//ai 명령어 처리 함수
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);		//ap 명령어 처리 함수
 bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people);
@@ -23,26 +25,29 @@ bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool pg_printEveryPerson(vector<string>& words, unordered_map<string, Person>& people);
 bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
+bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);				//di 명령어 처리 함수
 bool dr_delRoom(vector<string>& words, unordered_map<int, Room>& roomList);															//dr 명령어 처리 함수
 bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
+bool dm_delMeeting(int roomId_, string day_, double startTime_, unordered_map<int, Room>& roomList);
 bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomList);
 bool ds_delAllMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool dg_delAllPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 bool da_deleteAll(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 
+
 using namespace std;
 
 int main()
 {
-	unordered_map<int,Room> roomList;
+	unordered_map<int, Room> roomList;
 	unordered_map<string, Person> people;
 
 	cout << "-------------------Start Scheduling-------------------\n\n";
-	
+
 	do {
 		cout << "------------------------------------------------------" << endl;
-	} while(!simulation(roomList,people));
+	} while (!simulation(roomList, people));
 }
 
 bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person>& people)
@@ -52,18 +57,16 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	cout << "Enter your command : ";
 	getline(cin, command);
 	if (command == "") { return false; }
-
-
 	istringstream is{ command };
 	vector<string> words{ istream_iterator<string> {is},istream_iterator<string> {} }; 	//명령어 토큰화
 
-	
+
 	bool isQuit = false;
 	//명령어 해석 및 실행
 	if (words[0] == "qq") {
-		isQuit = true;
+		isQuit = qq_Quit(words, roomList, people);
 	}
-	else if(words[0] == "ar"){
+	else if (words[0] == "ar") {
 		isQuit = ar_insrtRoom(words, roomList);
 	}
 	else if (words[0] == "am") {
@@ -92,6 +95,9 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	}
 	else if (words[0] == "pa") {
 		isQuit = pa_printAll(words, roomList, people);
+	}
+	else if (words[0] == "rm") {
+		isQuit = rm_replaceMeeting(words, roomList, people);
 	}
 	else if (words[0] == "di") {
 		isQuit = di_delPerson(words, roomList, people);
@@ -130,6 +136,19 @@ inline bool isCmNum(vector<string>& words, int validNum)
 	else {
 		return false;
 	}
+}
+
+bool qq_Quit(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people)
+{
+	if (isCmNum(words, 1)) {
+		da_deleteAll(words, roomList, people);
+		pa_printAll(words, roomList, people);
+		return true;
+	}
+	else {
+		cerr << "Incalid command : wrong input number \n";
+	}
+	return false;
 }
 
 bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people)
@@ -255,12 +274,12 @@ bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList, unor
 		int PersonNum = people.size();
 		int RoomNum = roomList.size();
 		double meetingNum = 0;
-		for (auto& roomElement : roomList) {
-			meetingNum += roomElement.second.getMeetingList().size();
-		}
-		if (PersonNum == 0 && RoomNum == 0 && meetingNum == 0) {
+		if (PersonNum == 0 && RoomNum == 0) {
 			cout << "No data " << endl;
 			return false;
+		}
+		for (auto& roomElement : roomList) {
+			meetingNum += roomElement.second.getMeetingList().size();
 		}
 		cout << "# of person  : " << PersonNum << endl;
 		cout << "# of room    : " << RoomNum << endl;
@@ -297,7 +316,7 @@ bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 	return false; //다시 명령어 입력 받음
 }
 
-//회의 추가 함수 : 현재 오류 수정중
+//회의 추가 함수
 bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 {
 	int roomId;
@@ -329,6 +348,21 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 		cerr << "Invalid command : wrong input number \n";
 	}
 
+	return false; //다시 명령어 입력 받음
+}
+
+//함수 추가 함수 오버로딩
+bool am_insrtMeeting(int roomId_, string day_, double startTime_, double endTime_,string topic_, unordered_map<int, Room>& roomList)
+{
+	unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId_);
+	if (roomPtr == roomList.end()) {
+		cout << "There's no such room\n";
+		return false;
+	}
+	if (roomPtr->second.addMeeting(day_, startTime_, endTime_, topic_)) {
+		return false;
+	}
+	cout << "Meeting <" << roomId_ << "> <" << day_ << "> <" << startTime_ << "> <" << endTime_ << "> <" << topic_ << "> (added) \n";
 	return false; //다시 명령어 입력 받음
 }
 
@@ -382,6 +416,58 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 	}
 		
 	return false;
+}
+//범위, runtime(미팅존재) 캐치 해야한다.
+bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people)
+{
+	try {
+		if (isCmNum(words, 7)) {
+			int oldRoomId = stoi(words[1]);
+			string oldDay = words[2];
+			double oldStartTime = stod(words[3]);
+			int newRoomId = stoi(words[4]);
+			string newDay = words[5];
+			double newStartTime = stod(words[6]);
+			unordered_map<int, Room>::iterator oldRoomPtr = roomList.find(oldRoomId);
+			if (oldRoomPtr == roomList.end()) {
+				cout << "There is no such room\n";
+				return false;
+			}
+			string Topic = oldRoomPtr->second.getMeeting(oldDay, oldStartTime).getTopic();
+			int oldEndTime = oldRoomPtr->second.getMeeting(oldDay, oldStartTime).getEndTime();
+			int meetingTime = oldEndTime - oldStartTime;
+			int newEndTime = newStartTime + meetingTime;
+			unordered_map<string, Person> ParList = oldRoomPtr->second.getMeeting(oldDay, oldStartTime).getParticipation();
+			unordered_map<int, Room>::iterator newRoomPtr = roomList.find(newRoomId);
+			if (newRoomPtr == roomList.end()) {
+				cout << "There is no such room\n";
+				return false;
+			}
+			dm_delMeeting(oldRoomId, oldDay, oldStartTime, roomList);
+			if (newRoomPtr->second.addMeeting(newDay, newStartTime, newEndTime, Topic)) {
+				oldRoomPtr->second.addMeeting(oldDay, oldStartTime, oldEndTime, Topic);
+				oldRoomPtr->second.getMeeting(oldDay, oldStartTime).acceptParticipation(ParList);
+				cout << "Meeting <" << oldRoomId << "> <" << oldDay << "> <" << oldStartTime << "> <" << oldEndTime << "> <" << Topic << "> (added) \n";
+				return false;
+			}
+			else {
+				newRoomPtr->second.getMeeting(newDay, newStartTime).acceptParticipation(ParList);
+				cout << "Meeting <" << newRoomId << "> <" << newDay << "> <" << newStartTime << "> <" << newEndTime << "> <" << Topic << "> (added) \n";
+				return false;
+			}
+		}
+		else {
+			cerr << "Invalid command : worng input number \n";
+		}
+	}
+	catch (runtime_error) {
+		;
+	}
+	catch (out_of_range) {
+		cerr << "Input number out of range" << endl;
+	}
+	return false;
+
 }
 
 /* 
@@ -474,6 +560,29 @@ bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList) {
 	}
 	else {
 		cerr << "Invalid command : wrong input number \n";
+	}
+	return false;
+}
+/*dm 오버로딩 함수. dm romm day startTime을 직접 입력 받는다.
+*/
+bool dm_delMeeting(int roomId_, string day_, double startTime_, unordered_map<int, Room>& roomList) {
+	int roomId = roomId_;
+	string day = day_;
+	double time = startTime_;
+	auto roomPtr = roomList.find(roomId);
+	if (roomPtr != roomList.end()) {	//roomList에 방번호가 roomId인 방이 존재하면
+		auto& meetingList = roomPtr->second.getMeetingList();	//	미팅리스트
+		auto meetingId = roomPtr->second.getMeetingId(day, time);
+		if (meetingList.find(meetingId) != meetingList.end()) {		// 특정 시간에 회의가 있다면
+			meetingList.erase(meetingId);
+			cout << "Meeting <" << roomId << "> <" << day << "> <" << time << "> (deleted) \n";
+		}
+		else {
+			cerr << roomId << " 방에 Day: " << day << " Time: " << time << " 에 회의가 존재하지 않습니다." << endl;
+		}
+	}
+	else {
+		cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
 	}
 	return false;
 }

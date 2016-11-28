@@ -21,6 +21,13 @@ string Room::getMeetingId(string day, double startTime)
 	return day + "_" + to_string(startTime);
 }
 
+/*RoomId 반환
+*/
+double Room::getRoomId()
+{
+	return m_roomId;
+}
+
 /*해당 시간 구간에 meeting이 존재하는지를 검사한다.
 */
 bool Room::isMeeting(string day, double startTime, double endTime)

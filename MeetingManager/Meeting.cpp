@@ -15,10 +15,12 @@ Meeting::Meeting(string day_, double startTime_, double endTime_, string topic_)
 bool Meeting::isPerson(string name)
 {
 	for (auto it = m_Participation.begin(); it != m_Participation.end(); ++it) {
-		if (name != it->second.getName())
-			return true;
+		if (name == it->second.getName())
+		{
+			return true;		//존재
+		}
 	}
-	return false;
+	return false;				//존재하지 않음
 }
 
 bool Meeting::addParticipation(unordered_map<string, Person>& People, string name) {

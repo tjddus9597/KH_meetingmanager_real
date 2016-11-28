@@ -18,7 +18,7 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people);													//ai 명령어 처리 함수
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);		//ap 명령어 처리 함수
 bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people);
-//bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);
+bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 //bool pg_printEveryPerson(vector<string>& words, unordered_map<string, Person>& people);
@@ -72,9 +72,9 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	else if (words[0] == "pi") {
 		isQuit = pi_printPerson(words, people);
 	}
-	//else if (words[0] == "pr") {
-	//	isQuit = pr_printRoom(words, roomList);
-	//}
+	else if (words[0] == "pr") {
+		isQuit = pr_printRoom(words, roomList);
+	}
 	else if (words[0] == "di") {
 		isQuit = di_delPerson(words, roomList, people);
 	}
@@ -223,8 +223,8 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 			}
 			if (roomPtr->second.getMeeting(day, time).addParticipation(people, name)) {
 				return false;	// 오류 발생
-				cout << "Participation <" << roomId << "> <" << day << "> <" << time << "> <" << name << "> (added) \n";
 			}
+			cout << "Participation <" << roomId << "> <" << day << "> <" << time << "> <" << name << "> (added) \n";
 		}
 		else {
 			cerr << "Invalid command : worng input number \n";

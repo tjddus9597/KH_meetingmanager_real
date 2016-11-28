@@ -54,7 +54,6 @@ bool Room::addMeeting(string day, double startTime, double endTime, string topic
 	else {
 		Meeting newMeeting(day, startTime, endTime, topic);
 		m_meetingList.emplace(getMeetingId(day, startTime), newMeeting);
-		cerr << "미팅 생성\n";
 		return false;
 	}
 }

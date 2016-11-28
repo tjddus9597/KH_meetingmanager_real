@@ -26,8 +26,13 @@ bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList, unor
 bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);				//di 명령어 처리 함수
 bool dr_delRoom(vector<string>& words, unordered_map<int, Room>& roomList);															//dr 명령어 처리 함수
 bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
+bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomList);
+bool ds_delAllMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
+bool dg_delAllPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
+bool da_deleteAll(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 
 using namespace std;
+
 int main()
 {
 	unordered_map<int,Room> roomList;
@@ -36,7 +41,7 @@ int main()
 	cout << "-------------------Start Scheduling-------------------\n\n";
 	
 	do {
-
+		cout << "------------------------------------------------------" << endl;
 	} while(!simulation(roomList,people));
 }
 
@@ -96,6 +101,18 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	}
 	else if (words[0] == "dm") {
 		isQuit = dm_delMeeting(words, roomList);
+	}
+	else if (words[0] == "dp") {
+		isQuit = dp_delParticipation(words, roomList);
+	}
+	else if (words[0] == "ds") {
+		isQuit = ds_delAllMeeting(words, roomList);
+	}
+	else if (words[0] == "dg") {
+		isQuit = dg_delAllPerson(words, roomList,people);
+	}
+	else if (words[0] == "da") {
+		isQuit = da_deleteAll(words, roomList, people);
 	}
 	else {
 		cerr << "Wrong command\n";
@@ -280,8 +297,6 @@ bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 	return false; //다시 명령어 입력 받음
 }
 
-
-
 //회의 추가 함수 : 현재 오류 수정중
 bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 {
@@ -376,24 +391,23 @@ bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, uno
 	if (isCmNum(words, 2)) {
 		string name = words[1];
 		if (people.find(name) != people.end()) {	// people 안에 이름이 name인 person이 존재하면
-			if (roomList.size() == 0) {
-				people.erase(name);
-				cout << "Person <" << name << "> (deleted) \n";
-			}
-			else {
-				for (auto roomPtr = roomList.begin(); roomPtr != roomList.end(); roomPtr++) {
-					for (auto meetingPtr = roomPtr->second.getMeetingList().begin(); meetingPtr != roomPtr->second.getMeetingList().end(); meetingPtr++) {
-						auto PersonList = meetingPtr->second.getParticipation();
-						if (PersonList.find(name) == PersonList.end()) {	// 어떤 회의에도 참석하지 않았을 경우
-							people.erase(name);
-							cout << "Person <" << name << "> (deleted) \n";
-						}
-						else {
-							cout << name << " 은 회의에 참석 중입니다." << endl;
-						}
+			for (auto roomPtr = roomList.begin(); roomPtr != roomList.end(); roomPtr++) {
+				if (roomPtr->second.getMeetingList().begin() == roomPtr->second.getMeetingList().end()) {
+					people.erase(name);
+					cout << "Person <" << name << "> (deleted) \n";
+				}
+				for (auto meetingPtr = roomPtr->second.getMeetingList().begin(); meetingPtr != roomPtr->second.getMeetingList().end(); meetingPtr++) {
+					auto PersonList = meetingPtr->second.getParticipation();
+					if (PersonList.find(name) == PersonList.end()) {	// 특정 회의에도 참석하지 않았을 경우
+					}
+					else {
+						cout << name << " 은 회의에 참석 중입니다." << endl;
+						return false;
 					}
 				}
 			}
+			people.erase(name);
+			cout << "Person <" << name << "> (deleted) \n";
 		}
 		else {
 			cerr << "이름이 " << name << " 인 Person이 People안에 존재 하지 않습니다." << endl;
@@ -410,22 +424,27 @@ dr room: 특정 방번호 회의실과 그 방에 있는 모든 회의를 삭제. 오류: 방번호가 범위
 */
 
 bool dr_delRoom(vector<string>& words, unordered_map<int, Room>& roomList) {
-	if (isCmNum(words, 2)) {
-		int roomId = stoi(words[1]);
-		auto roomPtr = roomList.find(roomId);
-		if (roomPtr != roomList.end())  {	//roomList에 방번호가 roomId인 방이 존재하면
-			if (!roomPtr->second.getMeetingList().empty()) {	//방에 meeting이 존재하면
-				roomPtr->second.getMeetingList().clear();
+	try {
+		if (isCmNum(words, 2)) {
+			int roomId = stoi(words[1]);
+			auto roomPtr = roomList.find(roomId);
+			if (roomPtr != roomList.end()) {	//roomList에 방번호가 roomId인 방이 존재하면
+				if (!roomPtr->second.getMeetingList().empty()) {	//방에 meeting이 존재하면
+					roomPtr->second.getMeetingList().clear();
+				}
+				roomList.erase(roomId);
+				cout << "Room <" << roomId << "> (deleted) \n";
 			}
-			roomList.erase(roomId);
-			cout << "Room <" << roomId << "> (deleted) \n";
+			else {
+				cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
+			}
 		}
 		else {
-			cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
+			cerr << "Invalid command : wrong input number \n";
 		}
 	}
-	else {
-		cerr << "Invalid command : wrong input number \n";
+	catch (out_of_range) {
+		cerr << "Room ID out of range" << endl;
 	}
 	return false;
 }
@@ -439,19 +458,116 @@ bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList) {
 		double time = stod(words[3]);
 		auto roomPtr = roomList.find(roomId);
 		if (roomPtr != roomList.end()) {	//roomList에 방번호가 roomId인 방이 존재하면
-			auto meetingList = roomPtr->second.getMeetingList();	//	미팅리스트
+			auto& meetingList = roomPtr->second.getMeetingList();	//	미팅리스트
 			auto meetingId = roomPtr->second.getMeetingId(day, time);
 			if (meetingList.find(meetingId) != meetingList.end()) {		// 특정 시간에 회의가 있다면
 				meetingList.erase(meetingId);
 				cout << "Meeting <" << roomId << "> <" << day << "> <" << time << "> (deleted) \n";
 			}
 			else {
-				cerr << "회의가 존재하지 않습니다." << endl;
+				cerr << roomId << " 방에 Day: " << day << " Time: " << time << " 에 회의가 존재하지 않습니다." << endl;
 			}
 		}
 		else {
 			cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
 		}
+	}
+	else {
+		cerr << "Invalid command : wrong input number \n";
+	}
+	return false;
+}
+
+/*dp room day time name: 특정 사람을 미팅 참석자에서 삭제. 
+오류: 방번호 범위가 벗어날 때, 방번호에 해당하는 회의실이 없을 때,
+특정시간에 회의가 없을 때, 특정 사람이 회의 참석자가 아닐 때*/
+
+bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomList) {
+	try {
+		if (isCmNum(words, 5)) {
+			int roomId = stoi(words[1]);
+			string day = words[2];
+			double time = stod(words[3]);
+			string name = words[4];
+			auto roomPtr = roomList.find(roomId);
+			if (roomPtr != roomList.end()) {									// roomList에 방번호가 roomId인 방이 존재하면
+				auto& meetingList = roomPtr->second.getMeetingList();			// 미팅리스트
+				auto meetingId = roomPtr->second.getMeetingId(day, time);
+				if (meetingList.find(meetingId) != meetingList.end()) {			// 특정 시간에 회의가 있다면
+					auto& participation = meetingList.find(meetingId)->second.getParticipation();
+					if (participation.find(name) != participation.end()) {		// 이름이 name인 participation이 있다면
+						participation.erase(name);
+						cout << "Participation <" << roomId << "> <" << day << "> <" << time << "> <" << name << "> (deleted) \n";
+					}
+					else {
+						cerr << "이름이 " << name << " 인 Participation이 존재하지 않습니다." << endl;
+					}
+				}
+				else {
+					cerr << roomId << " 방에 Day: " << day << " Time: " << time << " 에 회의가 존재하지 않습니다." << endl;
+				}
+			}
+			else {
+				cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
+			}
+		}
+		else {
+			cerr << "Invalid command : wrong input number \n";
+		}
+	}
+	catch (out_of_range) {
+		cerr << "Room ID out of range" << endl;
+	}
+	return false;
+}
+
+/* ds: 모든 회의를 삭제. 오류: 없음 */
+
+bool ds_delAllMeeting(vector<string>& words, unordered_map<int, Room>& roomList) {
+	if (isCmNum(words, 1)) {
+		for (auto roomPtr = roomList.begin(); roomPtr != roomList.end(); roomPtr++) {
+			roomPtr->second.getMeetingList().clear();		//모든 회의 삭제
+		}
+		cout << "모든 회의 삭제 완료" << endl;
+	}
+	else {
+		cerr << "Invalid command : wrong input number \n";
+	}
+	return false;
+}
+
+/*dg: 모든 개인이 어떤 회의에도 참석하지 않는 경우, 모든 개인을 삭제. 오류: 참석자가 포함된 미팅이 있는 경우*/
+
+bool dg_delAllPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
+	if (isCmNum(words, 1)) {
+		bool noOneAttend = true;
+		for (auto roomPtr = roomList.begin(); roomPtr != roomList.end(); roomPtr++) {
+			for (auto meetingPtr = roomPtr->second.getMeetingList().begin(); meetingPtr != roomPtr->second.getMeetingList().end(); meetingPtr++) {
+				auto PersonList = meetingPtr->second.getParticipation();
+				if (PersonList.begin() != PersonList.end()) {	// 특정 회의 안에 사람이 있는 경우
+					noOneAttend = false;
+					cerr << "참석자가 포함된 미팅이 존재 합니다." << endl;
+					return false;
+				}
+			}
+		}
+		if (noOneAttend = true) {
+			people.clear();		// 모든 개인 삭제
+			cout << "모든 개인 삭제 완료" << endl;
+		}
+	}
+	else {
+		cerr << "Invalid command : wrong input number \n";
+	}
+	return false;
+}
+
+/*da: 모든 회의실, 모든 개인, 회의에 관한 정보 삭제. 오류: 없음*/
+
+bool da_deleteAll(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
+	if (isCmNum(words, 1)) {
+		roomList.clear();	// 모든 회의실, 회의 삭제
+		people.clear();		// 모든 개인 삭제
 	}
 	else {
 		cerr << "Invalid command : wrong input number \n";

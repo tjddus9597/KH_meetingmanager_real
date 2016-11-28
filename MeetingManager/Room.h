@@ -15,6 +15,7 @@ public:
 	string getMeetingId(string day, double starttime);
 	unordered_map<string, Meeting>& getMeetingList();
 	Meeting& getMeeting(string day, double starttime);
+	double getRoomId();
 	bool addMeeting(string day, double starttime, double endtime, string topic);
 	void delMeeting(string day, double starttime);
 	~Room();

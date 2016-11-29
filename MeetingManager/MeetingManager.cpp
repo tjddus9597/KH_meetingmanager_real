@@ -242,16 +242,15 @@ bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomL
 			return false;
 		}
 		for (auto& roomElement : roomList) {
-			cout << "[Room " << roomElement.second.getRoomId() << "]" << endl;
+			cout << "\n[Room " << roomElement.second.getRoomId() << "]" << endl;
 			for (auto& meetingElement : roomElement.second.getMeetingList()) {
-				cout << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << " " << meetingElement.second.getEndTime() <<
+				cout << "<Meeting> " << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << " " << meetingElement.second.getEndTime() <<
 					" " << meetingElement.second.getTopic() << endl;
 				unordered_map<string, Person>& parList = meetingElement.second.getParticipation();
 				for (auto& personElement : parList) {
-					cout << ": " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
+					cout << "<Participation> " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
 				}
 			}
-			cout << endl;
 		}
 	}
 	else {
@@ -313,7 +312,7 @@ bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 				return false;
 			}
 			roomList.emplace(roomId, Room(roomId));
-			cout << "Room <" << roomId << "> (Added)\n";
+			cout << "Room <" << roomId << "> (added)\n";
 		}
 		else {
 			cerr << "Invalid command : wrong input number \n";
@@ -702,16 +701,16 @@ bool sd_saveFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 		ofstream os(filename);
 
 		//사람 정보 출력
-		cout << "[Person]" << endl;
-		os << "[Person]" << endl;
+		cout << "[People]" << endl;
+		os << "[People]" << endl;
 		if (people.size() == 0) {
-			cout << "No person added" << endl;
-			os << "No person added" << endl;
+			cout << "No Person added" << endl;
+			os << "No Person added" << endl;
 		}
 		else {
 			for (auto& personElement : people) {
-				cout << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
-				os << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
+				cout << "<Person> " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
+				os << "<Person> " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
 			}
 		}
 		//회의실 정보 출력
@@ -733,14 +732,14 @@ bool sd_saveFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 			}
 			else {
 				for (auto& meetingElement : roomElement.second.getMeetingList()) {
-					cout << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << " " << meetingElement.second.getEndTime() <<
+					cout << "<Meeting> " << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << " " << meetingElement.second.getEndTime() <<
 						" " << meetingElement.second.getTopic() << endl;
-					os << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << " " << meetingElement.second.getEndTime() <<
+					os << "<Meeting> " << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << " " << meetingElement.second.getEndTime() <<
 						" " << meetingElement.second.getTopic() << endl;
 					unordered_map<string, Person>& parList = meetingElement.second.getParticipation();
 					for (auto& personElement : parList) {
-						cout << ": " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
-						os << ": " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
+						cout << "<Participation> " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
+						os << "<Participation> " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
 					}
 				}
 			}
@@ -761,22 +760,57 @@ bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 		while (!is.eof()) {
 			getline(is, command);
 			istringstream is{ command };
-			vector<string> words{ istream_iterator<string> {is},istream_iterator<string> {} }; 	//명령어 토큰화
-			lines.push_back({ command,words });
+			vector<string> tokens{ istream_iterator<string> {is},istream_iterator<string> {} }; 	//명령어 토큰화
+			lines.push_back({ command,tokens });
 		}
-
 		vector<pair<string, vector<string>>> ::iterator linesPtr = lines.begin();
-		int num = 0;
-		//for (auto& lineElement : lines)
-		//	cout << lineElement.first << endl;
-	
-		if (lines[1].first.compare("No person added") != 0) {
-			// 2번째 줄이 "No person added" 이 아닌경우
-			for (linesPtr++; linesPtr->second[0].compare("[Room") != 0; linesPtr++) {
-				string name = linesPtr->second[0];
-				string email = linesPtr->second[1];
-				vector<string> words{"ai",name,email};
-				ai_insrtPerson(words, people);
+		if (linesPtr->first != "[People]") {
+			cout << "불러올 파일이 저장 형식과 맞지 않습니다." << endl;
+			return false;
+		}
+		string Person_name, Person_email;
+		string roomId, day, startTime, endTime, topic, name, email;
+		for (linesPtr++; linesPtr!=lines.end(); linesPtr++) {
+			vector<string> words_ar;
+			vector<string> words_am;
+			vector<string> words_ap;
+			if (linesPtr->first != "") {
+				//Person 삽입
+				if (linesPtr->second[0] == "<Person>" ) {
+					Person_name = linesPtr->second[1];
+					Person_email = linesPtr->second[2];
+					vector<string> words_ai{ "ai",Person_name,Person_email };
+					ai_insrtPerson(words_ai, people);
+				}
+				else if(linesPtr->first == "No Person added") {
+					cout << "No Person added" << endl;
+				}
+				//Room 삽입
+				else if (linesPtr->second[0] == "[Room") {
+					roomId = linesPtr->second[1];
+					roomId.erase(roomId.find("]"));
+					words_ar = { "ar",roomId };
+					ar_insrtRoom(words_ar, roomList);
+				}
+				else if (linesPtr->first == "No Room Exist") {
+					cout << "No Room Exist" << endl;
+				}
+				//Meeting 삽입
+				else if (linesPtr->second[0] == "<Meeting>") {	
+					day = linesPtr->second[1];
+					startTime = linesPtr->second[2];
+					endTime = linesPtr->second[3];
+					topic = linesPtr->second[4];
+					words_am = { "am",roomId, day,startTime,endTime,topic };
+					am_insrtMeeting(words_am, roomList);
+				}
+				//Participation 삽입
+				else if (linesPtr->second[0] == "<Participation>") {	
+					name = linesPtr->second[1];
+					email = linesPtr->second[2];
+					words_ap = { "ap",roomId,day,startTime,name };
+					ap_insrtParticipation(words_ap, roomList, people);
+				}
 			}
 		}
 	}

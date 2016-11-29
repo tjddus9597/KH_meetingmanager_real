@@ -1,12 +1,12 @@
-[Person]
-kim kim@naver.com
-whang whang@naver.com
+[People]
+<Person> kim kim@naver.com
+<Person> whang whang@naver.com
 [Room 1]
-M 12 15 overwatch
-: kim kim@naver.com
-: whang whang@naver.com
-T 9 12 opp
-: kim kim@naver.com
+<Meeting> M 12 15 overwatch
+<Participation> kim kim@naver.com
+<Participation> whang whang@naver.com
+<Meeting> T 9 12 opp
+<Participation> kim kim@naver.com
 [Room 2]
-M 9 12 kant
-: whang whang@naver.com
+<Meeting> M 9 12 kant
+<Participation> whang whang@naver.com	

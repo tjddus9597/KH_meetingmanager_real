@@ -442,9 +442,9 @@ bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList
 				return false;
 			}
 			string Topic = oldRoomPtr->second.getMeeting(oldDay, oldStartTime).getTopic();
-			int oldEndTime = oldRoomPtr->second.getMeeting(oldDay, oldStartTime).getEndTime();
-			int meetingTime = oldEndTime - oldStartTime;
-			int newEndTime = newStartTime + meetingTime;
+			int oldEndTime = int(oldRoomPtr->second.getMeeting(oldDay, oldStartTime).getEndTime());
+			int meetingTime = int(oldEndTime - oldStartTime);
+			int newEndTime = int(newStartTime + meetingTime);
 			unordered_map<string, Person> ParList = oldRoomPtr->second.getMeeting(oldDay, oldStartTime).getParticipation();
 			unordered_map<int, Room>::iterator newRoomPtr = roomList.find(newRoomId);
 			if (newRoomPtr == roomList.end()) {

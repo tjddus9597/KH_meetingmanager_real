@@ -770,16 +770,14 @@ bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 		}
 		string Person_name, Person_email;
 		string roomId, day, startTime, endTime, topic, name, email;
-		vector<string> words_ar;
-		vector<string> words_am;
-		vector<string> words_ap;
+		vector<string> words_ai, words_ar, words_am, words_ap;
 		for (linesPtr++; linesPtr!=lines.end(); linesPtr++) {
 			if (linesPtr->first != "") {
 				//Person »ðÀÔ
 				if (linesPtr->second[0] == "<Person>" ) {
 					Person_name = linesPtr->second[1];
 					Person_email = linesPtr->second[2];
-					vector<string> words_ai{ "ai",Person_name,Person_email };
+					words_ai = { "ai",Person_name,Person_email };
 					ai_insrtPerson(words_ai, people);
 				}
 				else if(linesPtr->first == "No Person added") {

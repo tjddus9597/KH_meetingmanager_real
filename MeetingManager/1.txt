@@ -1,4 +1,4 @@
-[Person]
-No person added
+[People]
+No Person added
 [Room]
 No Room Exist

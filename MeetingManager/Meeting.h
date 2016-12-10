@@ -12,10 +12,10 @@ private:
 	unordered_map<string, Person> m_Participation; //container for Person
 	string m_topic;
 	string m_day;
-	double m_startTime;
-	double m_endTime;
+	int m_startTime;
+	int m_endTime;
 public: 
-	Meeting(string day_, double startTime_, double endTime_, string topic_);
+	Meeting(string day_, int startTime_, int endTime_, string topic_);
 	bool Meeting::isPerson(string name);
 	bool addParticipation(unordered_map<string, Person>& People, string name);
 	void Meeting::acceptParticipation(unordered_map<string, Person>& People);
@@ -24,10 +24,10 @@ public:
 	void delParticiaption(string name);
 	string getTopic() const;
 	string getDay() const;
-	double getStartTime() const;
-	double getEndTime() const;
+	int getStartTime() const;
+	int getEndTime() const;
 	void setTopic(const string new_topic);
 	void setDay(const string new_day);
-	void setStartTime(const double new_startTime);
-	void setEndTime(const double new_endTime);
+	void setStartTime(const int new_startTime);
+	void setEndTime(const int new_endTime);
 };

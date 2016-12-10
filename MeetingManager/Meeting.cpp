@@ -2,7 +2,7 @@
 #include "Meeting.h"
 
 
-Meeting::Meeting(string day_, double startTime_, double endTime_, string topic_)
+Meeting::Meeting(string day_, int startTime_, int endTime_, string topic_)
 {
 	m_topic = topic_;
 	m_day = day_;
@@ -89,11 +89,11 @@ string Meeting::getDay() const {
 	return m_day;
 }
 
-double Meeting::getStartTime() const {
+int Meeting::getStartTime() const {
 	return m_startTime;
 }
 
-double Meeting::getEndTime() const {
+int Meeting::getEndTime() const {
 	return m_endTime;
 }
 
@@ -105,10 +105,10 @@ void Meeting::setDay(const string new_day) {
 	m_day = new_day;
 }
 
-void Meeting::setStartTime(const double new_startTime) {
+void Meeting::setStartTime(const int new_startTime) {
 	m_startTime = new_startTime;
 }
 
-void Meeting::setEndTime(const double new_endTime) {
+void Meeting::setEndTime(const int new_endTime) {
 	m_endTime = new_endTime;
 }

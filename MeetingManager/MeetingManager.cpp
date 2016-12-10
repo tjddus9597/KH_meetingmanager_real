@@ -118,9 +118,9 @@ inline bool isDay(string& day)
 	else { return true; }
 }
 
-inline bool isTime(double time)
+inline bool isTime(int time)
 {
-	if (0 <= time && time <= 24) { return false; }
+	if (0 <= time && time < 24) { return false; }
 	else { return true; }
 }
 
@@ -206,7 +206,7 @@ bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 			if (roomId < 0) { throw out_of_range("Minus"); }
 			string day = words[2];
 			if (isDay(day)) { throw invalid_argument("day"); }
-			double startTime = stod(words[3]);
+			int startTime = stoi(words[3]);
 			if(isTime(startTime)) { throw invalid_argument("Time"); }
 			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
 			if (roomPtr == roomList.end()) {
@@ -243,8 +243,8 @@ bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 {	
 	if (isCmNum(words, 1)) {
-		double meetingNum = 0;
-		double roomNum = 0;
+		int meetingNum = 0;
+		int roomNum = 0;
 		for (auto& roomElements : roomList) {
 			meetingNum += roomElements.second.getMeetingList().size();
 			roomNum++;
@@ -304,7 +304,7 @@ bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList, unor
 	if (isCmNum(words, 1)) {
 		int PersonNum = static_cast<int>(people.size());
 		int RoomNum = static_cast<int>(roomList.size());
-		double meetingNum = 0;
+		int meetingNum = 0;
 		for (auto& roomElement : roomList) {
 			meetingNum += roomElement.second.getMeetingList().size();
 		}
@@ -352,16 +352,17 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 {
 	int roomId;
 	string day;
-	double startTime;
-	double endTime;
+	int startTime;
+	int endTime;
 	string topic;
 	try {
 		if (isCmNum(words, 6)) {
 			roomId = stoi(words[1]);
 			day = words[2];
-			startTime = stod(words[3]);
+			if (isDay(day)) { throw invalid_argument("Day"); }
+			startTime = stoi(words[3]);
 			if (isTime(startTime)) { throw invalid_argument("Time"); }
-			endTime = stod(words[4]);
+			endTime = stoi(words[4]);
 			if (isTime(endTime)) { throw invalid_argument("Time"); }
 			topic = words[5];
 			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
@@ -393,7 +394,7 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 }
 
 //함수 추가 함수 오버로딩
-bool am_insrtMeeting(int roomId_, string day_, double startTime_, double endTime_,string topic_, unordered_map<int, Room>& roomList)
+bool am_insrtMeeting(int roomId_, string day_, int startTime_, int endTime_,string topic_, unordered_map<int, Room>& roomList)
 {
 	unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId_);
 	if (roomPtr == roomList.end()) {
@@ -435,7 +436,7 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 			if (roomId < 0) { throw out_of_range("Minus"); }
 			string day = words[2];
 			if (isDay(day)) { throw invalid_argument("day"); }
-			double time = stod(words[3]);
+			int time = stoi(words[3]);
 			if (isTime(time)) { throw invalid_argument("Time"); }
 			string name = words[4];
 			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
@@ -473,13 +474,13 @@ bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList
 			if (oldRoomId < 0) { throw out_of_range("Minus"); }
 			string oldDay = words[2];
 			if (isDay(oldDay)) { throw invalid_argument("day"); }
-			double oldStartTime = stod(words[3]);
+			int oldStartTime = stoi(words[3]);
 			if (isTime(oldStartTime)) { throw invalid_argument("Time"); }
 			int newRoomId = stoi(words[4]);
 			if (newRoomId < 0) { throw out_of_range("Minus"); }
 			string newDay = words[5];
 			if (isDay(newDay)) { throw invalid_argument("day"); }
-			double newStartTime = stod(words[6]);
+			int newStartTime = stoi(words[6]);
 			if (isTime(newStartTime)) { throw invalid_argument("Time"); }
 			unordered_map<int, Room>::iterator oldRoomPtr = roomList.find(oldRoomId);
 			if (oldRoomPtr == roomList.end()) {
@@ -599,7 +600,7 @@ bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList) {
 		if (isCmNum(words, 4)) {
 			int roomId = stoi(words[1]);
 			string day = words[2];
-			double time = stod(words[3]);
+			int time = stoi(words[3]);
 			if (isTime(time)) { throw invalid_argument("Time"); }
 			auto roomPtr = roomList.find(roomId);
 			if (roomPtr != roomList.end()) {	//roomList에 방번호가 roomId인 방이 존재하면
@@ -631,10 +632,10 @@ bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList) {
 }
 /*dm 오버로딩 함수. dm romm day startTime을 직접 입력 받는다.
 */
-bool dm_delMeeting(int roomId_, string day_, double startTime_, unordered_map<int, Room>& roomList) {
+bool dm_delMeeting(int roomId_, string day_, int startTime_, unordered_map<int, Room>& roomList) {
 	int roomId = roomId_;
 	string day = day_;
-	double time = startTime_;
+	int time = startTime_;
 	auto roomPtr = roomList.find(roomId);
 	if (roomPtr != roomList.end()) {	//roomList에 방번호가 roomId인 방이 존재하면
 		auto& meetingList = roomPtr->second.getMeetingList();	//	미팅리스트
@@ -663,7 +664,7 @@ bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomLi
 			if (roomId < 0) { throw out_of_range("Minus"); }
 			string day = words[2];
 			if (isDay(day)) { throw invalid_argument("day"); }
-			double time = stod(words[3]);
+			int time = stoi(words[3]);
 			if (isTime(time)) { throw invalid_argument("Time"); }
 			string name = words[4];
 			auto roomPtr = roomList.find(roomId);

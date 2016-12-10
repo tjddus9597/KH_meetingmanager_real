@@ -17,7 +17,7 @@ inline bool isCmNum(vector<string>& words, int validNum);																		//명�
 bool qq_Quit(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList);												 	    //ar 명령어 처리 함수
 bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList);													//am 명령어 처리 함수
-bool am_insrtMeeting(int roomId_, string day_, double startTime_, double endTime_, string topic_, unordered_map<int, Room>& roomList);
+bool am_insrtMeeting(int roomId_, string day_, int startTime_, int endTime_, string topic_, unordered_map<int, Room>& roomList);
 bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people);													//ai 명령어 처리 함수
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);		//ap 명령어 처리 함수
 bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people);
@@ -30,7 +30,7 @@ bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList
 bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);				//di 명령어 처리 함수
 bool dr_delRoom(vector<string>& words, unordered_map<int, Room>& roomList);															//dr 명령어 처리 함수
 bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
-bool dm_delMeeting(int roomId_, string day_, double startTime_, unordered_map<int, Room>& roomList);
+bool dm_delMeeting(int roomId_, string day_, int startTime_, unordered_map<int, Room>& roomList);
 bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 bool ds_delAllMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool dg_delAllPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);

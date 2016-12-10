@@ -59,7 +59,7 @@ bool Room::addMeeting(string day, double startTime, double endTime, string topic
 {	
 	//meeting 시간 겹치는지 확인
 	if (isMeeting(day,startTime,endTime)) {
-		cerr << "There is other meeting at this time \n";
+		cerr << "There is already a meeting at that time!\n";
 		return true;//이미 미팅이 있다면 true
 	}
 	//meeting 생성(meetingId 생성) 및 m_meetingList에 할당
@@ -95,7 +95,7 @@ Meeting& Room::getMeeting(string day, double startTime)
 {
 	//meeting 존재 확인
 	if (m_meetingList.find(getMeetingId(day, startTime)) == m_meetingList.end()) {
-		cout << "No such meeting exist" << endl;
+		cout << "No room with that number!" << endl;
 		throw runtime_error("nosuchroom");
 	}
 	//meeting 반환

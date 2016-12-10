@@ -29,7 +29,7 @@ bool Meeting::addParticipation(unordered_map<string, Person>& People, string nam
 	{
 		if (isPerson(name))	// Participation 안에 이름이 name인 Person이 이미 존재하면
 		{
-			cerr << "Participation 안에 "<< "이름이 " << name << " 인 Person이 이미 존재합니다." << endl;
+			cerr << "This person is already a participant!" << endl;
 			return true;	//오류 발생
 		}
 		else {
@@ -38,7 +38,7 @@ bool Meeting::addParticipation(unordered_map<string, Person>& People, string nam
 		}
 	}
 	else {
-		cerr << "People 안에 " << "이름이 " << name << " 인 Person이 존재 하지 않습니다." << endl;
+		cerr << "This person is already a participant!" << endl;
 		return true;	// 오류 발생
 	}
 }
@@ -55,7 +55,7 @@ void Meeting::delParticiaption(string name)
 {
 	//Person 존재 확인
 	if(isPerson(name))
-		cerr << "이름이 " << name << " 인 Person이 존재 하지 않습니다." << endl;
+		cerr << "No person with that name!" << endl;
 	//Person 삭제
 	else {
 		m_Participation.erase(name);
@@ -69,7 +69,7 @@ Person& Meeting::getParticipation(string name)
 {
 	//Person 존재 확인
 	if (isPerson(name)) {
-		cerr << "이름이 " << name << " 인 Person이 존재 하지 않습니다." << endl;
+		cerr << "No person with that name!" << endl;
 	}
 	//Person 반환
 	else

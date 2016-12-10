@@ -57,7 +57,7 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 {
 	//명령어 입력
 	string command;
-	cout << "Enter your command : ";
+	cout << "Enter a command : ";
 	getline(cin, command);
 	if (command == "") { return false; }
 	istringstream is{ command };
@@ -151,7 +151,7 @@ bool qq_Quit(vector<string>& words, unordered_map<int, Room>& roomList, unordere
 {
 	if (isCmNum(words, 1)) {
 		da_deleteAll(words, roomList, people);
-		pa_printAll(words, roomList, people);
+		cout << "Done" << endl;
 		return true;
 	}
 	else {
@@ -188,11 +188,23 @@ bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 			cout << "There's no such room\n";
 			return false;
 		}
-		cout << "[Room " << roomId <<"]"<< endl;
+		cout << "--- Room " << roomId <<" ---"<< endl;
 		unordered_map<string, Meeting>& meetingList = roomPtr->second.getMeetingList();
+		if (meetingList.size() == 0) {
+			cout << "No meetings are scheduled" << endl;
+			return false;
+		}
 		for (auto& meetingElement : meetingList) {
-			cout << ": " << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << " " <<
-				meetingElement.second.getEndTime() << " " << meetingElement.second.getTopic() << endl;
+			cout << "Meeting time: " << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << ", Topic: " <<
+				meetingElement.second.getTopic() << endl;
+			unordered_map<string, Person>& parList = meetingElement.second.getParticipation();
+			cout << "Participatns: ";
+			for (auto& personElement : parList) {
+				cout << endl << personElement.second.getName();
+			}
+			if (parList.size() == 0)
+				cout << "None";
+			cout << endl;
 		}
 	}
 	else {
@@ -214,11 +226,15 @@ bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 				return false;
 			}
 			Meeting& meeting = roomPtr->second.getMeeting(day, startTime);
-			cout << meeting.getDay() << " " << meeting.getStartTime() << " " << meeting.getEndTime() << " " << meeting.getTopic() << endl;
 			unordered_map<string, Person>& parList = meeting.getParticipation();
+			cout << "Meeting time: " << meeting.getDay() << " " << meeting.getStartTime() << ", Topic: " << meeting.getTopic() << endl;
+			cout << "Participatns: ";
 			for (auto& personElement : parList) {
-				cout << ": " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
+				cout << endl << personElement.second.getName();
 			}
+			if (parList.size() == 0)
+				cout << "None";
+			cout << endl;
 		}
 		else {
 			cerr << "Invalid command : wrong input number \n";
@@ -234,22 +250,34 @@ bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomL
 {	
 	if (isCmNum(words, 1)) {
 		double meetingNum = 0;
+		double roomNum = 0;
 		for (auto& roomElements : roomList) {
 			meetingNum += roomElements.second.getMeetingList().size();
+			roomNum++;
 		}
-		if (meetingNum == 0) {
-			cout << "No Meeting Exist" << endl;
+		if (roomNum == 0) {
+			cout << "List of rooms is empty" << endl;
 			return false;
 		}
+		cout << "Information for " << roomNum << " rooms: " << endl;
 		for (auto& roomElement : roomList) {
-			cout << "\n[Room " << roomElement.second.getRoomId() << "]" << endl;
-			for (auto& meetingElement : roomElement.second.getMeetingList()) {
-				cout << "<Meeting> " << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << " " << meetingElement.second.getEndTime() <<
-					" " << meetingElement.second.getTopic() << endl;
+			cout << "--- Room " << roomElement.second.getRoomId() << " ---" << endl;
+			unordered_map<string, Meeting>& meetingList = roomElement.second.getMeetingList();
+			if (meetingList.size() == 0) {
+				cout << "No meetings are scheduled" << endl;
+				return false;
+			}
+			for (auto& meetingElement : meetingList) {
+				cout << "Meeting time: " << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << ", Topic: " <<
+					meetingElement.second.getTopic() << endl;
 				unordered_map<string, Person>& parList = meetingElement.second.getParticipation();
+				cout << "Participatns: ";
 				for (auto& personElement : parList) {
-					cout << "<Participation> " << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
+					cout << endl << personElement.second.getName();
 				}
+				if (parList.size() == 0)
+					cout << "None";
+				cout << endl;
 			}
 		}
 	}
@@ -263,9 +291,10 @@ bool pg_printEveryPerson(vector<string>& words, unordered_map<string, Person>& p
 {
 	if (isCmNum(words, 1)) {
 		if (people.size() == 0) {
-			cout << "No person added" << endl;
+			cout << "List of people is empty" << endl;
 			return false;
 		}
+		cout << "Information for " << people.size() << " people:" << endl;
 		for (auto& personElement : people) {
 			cout << personElement.second.getName() << " " << personElement.second.getEmail() << endl;
 		}
@@ -282,16 +311,16 @@ bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList, unor
 		int PersonNum = people.size();
 		int RoomNum = roomList.size();
 		double meetingNum = 0;
-		if (PersonNum == 0 && RoomNum == 0) {
-			cout << "No data " << endl;
-			return false;
-		}
+		//if (PersonNum == 0 && RoomNum == 0) {
+		//	cout << "No data " << endl;
+		//	return false;
+		//}
 		for (auto& roomElement : roomList) {
 			meetingNum += roomElement.second.getMeetingList().size();
 		}
-		cout << "# of person  : " << PersonNum << endl;
-		cout << "# of room    : " << RoomNum << endl;
-		cout << "# of meeting : " << meetingNum << endl;
+		cout << "Persons : " << PersonNum << endl;
+		cout << "Meetings : " << meetingNum << endl;
+		cout << "Rooms : " << RoomNum << endl;
 	}
 	else {
 		cerr << "Invalid command : wrong input number \n";
@@ -308,11 +337,11 @@ bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 			roomId = stoi(words[1]);
 			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
 			if (roomPtr != roomList.end()) {
-				cout << "Room is already exist\n";
+				cout << "There is already a room with this number!\n";
 				return false;
 			}
 			roomList.emplace(roomId, Room(roomId));
-			cout << "Room <" << roomId << "> (added)\n";
+			cout << "Room " << roomId << " added\n";
 		}
 		else {
 			cerr << "Invalid command : wrong input number \n";
@@ -350,7 +379,7 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 		if (roomPtr->second.addMeeting(day, startTime, endTime, topic)) {
 			return false;
 		}
-		cout << "Meeting <" << roomId << "> <" << day << "> <" << startTime << "> <" << endTime << "> <" << topic << "> (added) \n";
+		cout << "Meeting added at " << day << " " << startTime << endl;
 	}
 	else {
 		cerr << "Invalid command : wrong input number \n";
@@ -370,7 +399,7 @@ bool am_insrtMeeting(int roomId_, string day_, double startTime_, double endTime
 	if (roomPtr->second.addMeeting(day_, startTime_, endTime_, topic_)) {
 		return false;
 	}
-	cout << "Meeting <" << roomId_ << "> <" << day_ << "> <" << startTime_ << "> <" << endTime_ << "> <" << topic_ << "> (added) \n";
+	cout << "Meeting added at" << day_ << " " << startTime_ << endl;
 	return false; //다시 명령어 입력 받음
 }
 
@@ -383,11 +412,11 @@ bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people
 			name = words[1];
 			email = words[2];
 			if (people.find(name) != people.end()) {
-				cout << "This person is already added" << endl;
+				cout << "There is already a person with this name!" << endl;
 				return false;
 			}
 			people.emplace(name, Person(name, email));
-			cout << "Person <" << name << "> <" << email << "> (added)\n";
+			cout << "Person " << name << " added\n";
 	}
 	else {
 		cerr << "Invalid command : wrong input number \n";
@@ -410,7 +439,7 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 			if (roomPtr->second.getMeeting(day, time).addParticipation(people, name)) {
 				return false;	// 오류 발생
 			}
-			cout << "Participation <" << roomId << "> <" << day << "> <" << time << "> <" << name << "> (added) \n";
+			cout << "Participation "<< name << " added \n";
 		}
 		else {
 			cerr << "Invalid command : worng input number \n";
@@ -486,10 +515,6 @@ bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, uno
 		string name = words[1];
 		if (people.find(name) != people.end()) {	// people 안에 이름이 name인 person이 존재하면
 			for (auto roomPtr = roomList.begin(); roomPtr != roomList.end(); roomPtr++) {
-				if (roomPtr->second.getMeetingList().begin() == roomPtr->second.getMeetingList().end()) {
-					people.erase(name);
-					cout << "Person <" << name << "> (deleted) \n";
-				}
 				for (auto meetingPtr = roomPtr->second.getMeetingList().begin(); meetingPtr != roomPtr->second.getMeetingList().end(); meetingPtr++) {
 					auto PersonList = meetingPtr->second.getParticipation();
 					if (PersonList.find(name) == PersonList.end()) {	// 특정 회의에도 참석하지 않았을 경우
@@ -501,7 +526,7 @@ bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, uno
 				}
 			}
 			people.erase(name);
-			cout << "Person <" << name << "> (deleted) \n";
+			cout << "Person " << name << " deleted" << endl;
 		}
 		else {
 			cerr << "이름이 " << name << " 인 Person이 People안에 존재 하지 않습니다." << endl;
@@ -527,7 +552,7 @@ bool dr_delRoom(vector<string>& words, unordered_map<int, Room>& roomList) {
 					roomPtr->second.getMeetingList().clear();
 				}
 				roomList.erase(roomId);
-				cout << "Room <" << roomId << "> (deleted) \n";
+				cout << "Room " << roomId << " deleted \n";
 			}
 			else {
 				cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
@@ -556,7 +581,7 @@ bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList) {
 			auto meetingId = roomPtr->second.getMeetingId(day, time);
 			if (meetingList.find(meetingId) != meetingList.end()) {		// 특정 시간에 회의가 있다면
 				meetingList.erase(meetingId);
-				cout << "Meeting <" << roomId << "> <" << day << "> <" << time << "> (deleted) \n";
+				cout << "Meeting at " << day << " " << time << " deleted \n";
 			}
 			else {
 				cerr << roomId << " 방에 Day: " << day << " Time: " << time << " 에 회의가 존재하지 않습니다." << endl;
@@ -614,7 +639,7 @@ bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomLi
 					auto& participation = meetingList.find(meetingId)->second.getParticipation();
 					if (participation.find(name) != participation.end()) {		// 이름이 name인 participation이 있다면
 						participation.erase(name);
-						cout << "Participation <" << roomId << "> <" << day << "> <" << time << "> <" << name << "> (deleted) \n";
+						cout << "Participation " << name << " deleted"<<endl;
 					}
 					else {
 						cerr << "이름이 " << name << " 인 Participation이 존재하지 않습니다." << endl;
@@ -645,7 +670,7 @@ bool ds_delAllMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 		for (auto roomPtr = roomList.begin(); roomPtr != roomList.end(); roomPtr++) {
 			roomPtr->second.getMeetingList().clear();		//모든 회의 삭제
 		}
-		cout << "모든 회의 삭제 완료" << endl;
+		cout << "All meetngs deleted" << endl;
 	}
 	else {
 		cerr << "Invalid command : wrong input number \n";
@@ -670,7 +695,7 @@ bool dg_delAllPerson(vector<string>& words, unordered_map<int, Room>& roomList, 
 		}
 		if (noOneAttend = true) {
 			people.clear();		// 모든 개인 삭제
-			cout << "모든 개인 삭제 완료" << endl;
+			cout << "All persons deleted" << endl;
 		}
 	}
 	else {
@@ -685,7 +710,7 @@ bool da_deleteAll(vector<string>& words, unordered_map<int, Room>& roomList, uno
 	if (isCmNum(words, 1)) {
 		roomList.clear();	// 모든 회의실, 회의 삭제
 		people.clear();		// 모든 개인 삭제
-		cout << "All data deleted" << endl;
+		cout << "All rooms are deleted \nAll meetngs deleted\nAll persons deleted" << endl;
 	}
 	else {
 		cerr << "Invalid command : wrong input number \n";

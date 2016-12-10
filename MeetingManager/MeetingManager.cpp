@@ -26,12 +26,12 @@ bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool pg_printEveryPerson(vector<string>& words, unordered_map<string, Person>& people);
 bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
-bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
+bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);				//di 명령어 처리 함수
 bool dr_delRoom(vector<string>& words, unordered_map<int, Room>& roomList);															//dr 명령어 처리 함수
 bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool dm_delMeeting(int roomId_, string day_, double startTime_, unordered_map<int, Room>& roomList);
-bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomList);
+bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 bool ds_delAllMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool dg_delAllPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 bool da_deleteAll(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
@@ -100,7 +100,7 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 		isQuit = pa_printAll(words, roomList, people);
 	}
 	else if (words[0] == "rm") {
-		isQuit = rm_replaceMeeting(words, roomList, people);
+		isQuit = rm_replaceMeeting(words, roomList);
 	}
 	else if (words[0] == "di") {
 		isQuit = di_delPerson(words, roomList, people);
@@ -112,7 +112,7 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 		isQuit = dm_delMeeting(words, roomList);
 	}
 	else if (words[0] == "dp") {
-		isQuit = dp_delParticipation(words, roomList);
+		isQuit = dp_delParticipation(words, roomList, people);
 	}
 	else if (words[0] == "ds") {
 		isQuit = ds_delAllMeeting(words, roomList);
@@ -192,7 +192,7 @@ bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people
 		}
 	}
 	else {
-		cerr << "Incalid command : worng input number \n";
+		cerr << "Incalid command : wrong input number \n";
 	}
 	return false;
 }
@@ -227,7 +227,7 @@ bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 		}
 	}
 	else {
-		cerr << "Invalid command : worng input number \n";
+		cerr << "Invalid command : wrong input number \n";
 	}
 	}
 	catch (out_of_range) {
@@ -492,7 +492,7 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 			cout << "Participation "<< name << " added \n";
 		}
 		else {
-			cerr << "Invalid command : worng input number \n";
+			cerr << "Invalid command : wrong input number \n";
 		}
 	}
 	catch (runtime_error) {
@@ -508,7 +508,7 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 }
 
 
-bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people)
+bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 {
 	try {
 		if (isCmNum(words, 7)) {
@@ -554,7 +554,7 @@ bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList
 			return false;
 		}
 		else {
-			cerr << "Invalid command : worng input number \n";
+			cerr << "Invalid command : wrong input number \n";
 		}
 	}
 	catch (runtime_error) {
@@ -698,7 +698,7 @@ bool dm_delMeeting(int roomId_, string day_, double startTime_, unordered_map<in
 오류: 방번호 범위가 벗어날 때, 방번호에 해당하는 회의실이 없을 때,
 특정시간에 회의가 없을 때, 특정 사람이 회의 참석자가 아닐 때*/
 
-bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomList) {
+bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
 	try {
 		if (isCmNum(words, 5)) {
 			int roomId = stoi(words[1]);
@@ -709,6 +709,10 @@ bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomLi
 			if (isTime(time)) { throw invalid_argument("Time"); }
 			string name = words[4];
 			auto roomPtr = roomList.find(roomId);
+			if (people.find(name) == people.end()) {							// name이라는 이름을 가진 사람이 없다면
+				cerr << "No person with that name!" << endl;
+				return false;
+			}
 			if (roomPtr != roomList.end()) {									// roomList에 방번호가 roomId인 방이 존재하면
 				auto& meetingList = roomPtr->second.getMeetingList();			// 미팅리스트
 				auto meetingId = roomPtr->second.getMeetingId(day, time);

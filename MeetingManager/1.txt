@@ -1,5 +1,5 @@
 [People]
-<Person> Dongwon kang@dgist.ac.kr
 <Person> Shinhye park@dgist.ac.kr
-[Room 1002]
-No Meeting Exist
+[Room 1001]
+<Meeting> M 10 12 Silly_Stuff
+<Participation> Shinhye park@dgist.ac.kr

@@ -173,7 +173,7 @@ bool qq_Quit(vector<string>& words, unordered_map<int, Room>& roomList, unordere
 		return true;
 	}
 	else {
-		cerr << "Incalid command : wrong input number \n";
+		cerr << "Invalid command : wrong input number \n";
 	}
 	return false;
 }
@@ -192,7 +192,7 @@ bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people
 		}
 	}
 	else {
-		cerr << "Incalid command : wrong input number \n";
+		cerr << "Invalid command : wrong input number \n";
 	}
 	return false;
 }
@@ -204,7 +204,7 @@ bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 		int roomId = stoi(words[1]);
 		unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
 		if (roomPtr == roomList.end()) {
-			cout << "There's no such room\n";
+			cout << "No room with that number!\n";
 			return false;
 		}
 		cout << "--- Room " << roomId << " ---" << endl;
@@ -251,7 +251,7 @@ bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 			if(isTime(startTime)) { throw invalid_argument("Time"); }
 			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
 			if (roomPtr == roomList.end()) {
-				cout << "There's no such room\n";
+				cout << "No room with that number!\n";
 				return false;
 			}
 			Meeting& meeting = roomPtr->second.getMeeting(day, startTime);
@@ -401,15 +401,17 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 			roomId = stoi(words[1]);
 			day = words[2];
 			startTime = stod(words[3]);
+			if (isTime(startTime)) { throw invalid_argument("Time"); }
 			endTime = stod(words[4]);
+			if (isTime(endTime)) { throw invalid_argument("Time"); }
 			topic = words[5];
 			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
 			if (roomPtr == roomList.end()) {
-				cout << "There's no such room\n";
+				cout << "No room with that number!\n";
 				return false;
 			}
 			if (endTime <= startTime) {
-				cout << "Endtime is faster (or same) as starttime" << endl;
+				cout << "Endtime is faster (or same) as start time" << endl;
 				return false;
 			}
 			if (roomPtr->second.addMeeting(day, startTime, endTime, topic)) {
@@ -436,7 +438,7 @@ bool am_insrtMeeting(int roomId_, string day_, double startTime_, double endTime
 {
 	unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId_);
 	if (roomPtr == roomList.end()) {
-		cout << "There's no such room\n";
+		cout << "No room with that number!\n";
 		return false;
 	}
 	if (roomPtr->second.addMeeting(day_, startTime_, endTime_, topic_)) {
@@ -479,7 +481,7 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 			string name = words[4];
 			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
 			if (roomPtr == roomList.end()) {
-				cout << "There's no such room\n";
+				cout << "No room with that number!\n";
 				return false;
 			}
 			if (roomPtr->second.getMeeting(day, time).addParticipation(people, name)) {
@@ -522,7 +524,7 @@ bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList
 			if (isTime(newStartTime)) { throw invalid_argument("Time"); }
 			unordered_map<int, Room>::iterator oldRoomPtr = roomList.find(oldRoomId);
 			if (oldRoomPtr == roomList.end()) {
-				cout << "There is no such room\n";
+				cout << "No room with that number!\n";
 				return false;
 			}
 			string Topic = oldRoomPtr->second.getMeeting(oldDay, oldStartTime).getTopic();
@@ -533,7 +535,7 @@ bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList
 			unordered_map<string, Person> ParList = oldRoomPtr->second.getMeeting(oldDay, oldStartTime).getParticipation();
 			unordered_map<int, Room>::iterator newRoomPtr = roomList.find(newRoomId);
 			if (newRoomPtr == roomList.end()) {
-				cout << "There is no such room\n";
+				cout << "No room with that number!\n";
 				return false;
 			}
 
@@ -639,6 +641,7 @@ bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList) {
 			int roomId = stoi(words[1]);
 			string day = words[2];
 			double time = stod(words[3]);
+			if (isTime(time)) { throw invalid_argument("Time"); }
 			auto roomPtr = roomList.find(roomId);
 			if (roomPtr != roomList.end()) {	//roomList에 방번호가 roomId인 방이 존재하면
 				auto& meetingList = roomPtr->second.getMeetingList();	//	미팅리스트

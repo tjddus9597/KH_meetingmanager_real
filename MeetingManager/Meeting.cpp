@@ -38,7 +38,7 @@ bool Meeting::addParticipation(unordered_map<string, Person>& People, string nam
 		}
 	}
 	else {
-		cerr << "This person is already a participant!" << endl;
+		cerr << "No person with that name!" << endl;
 		return true;	// 오류 발생
 	}
 }

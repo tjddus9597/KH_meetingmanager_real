@@ -40,6 +40,18 @@ bool Room::isMeeting(string day, double startTime, double endTime)
 	return false;
 }
 
+bool Room::isMeetingEx(string oldDay, double oldStartTime, string newDay, double newStartTime, double newEndTime)
+{	
+	for (auto it = m_meetingList.begin(); it != m_meetingList.end(); ++it) {
+		if ((it != m_meetingList.find(getMeetingId(oldDay,oldStartTime)))&&(!((newDay != it->second.getDay()) ||
+			(newStartTime >= it->second.getEndTime()) || (newEndTime <= it->second.getStartTime()))))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 /*meeting을 추가한다.
 * 시간이 겹치는지 확인이 필요하다.
 */

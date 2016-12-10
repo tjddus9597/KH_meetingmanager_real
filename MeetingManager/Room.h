@@ -9,9 +9,11 @@ class Room
 private:
 	int m_roomId;
 	unordered_map<string, Meeting> m_meetingList; //container for meetings
-	bool isMeeting(string day, double starttime, double endtime);
+	
 public:
 	Room(int roomid);
+	bool isMeeting(string day, double starttime, double endtime);
+	bool Room::isMeetingEx(string oldDay, double oldStartTime, string newDay, double newStartTime, double newEndTime);
 	string getMeetingId(string day, double starttime);
 	unordered_map<string, Meeting>& getMeetingList();
 	Meeting& getMeeting(string day, double starttime);

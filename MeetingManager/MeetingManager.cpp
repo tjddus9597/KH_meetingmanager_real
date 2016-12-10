@@ -583,7 +583,7 @@ bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, uno
 					if (PersonList.find(name) == PersonList.end()) {	// 특정 회의에도 참석하지 않았을 경우
 					}
 					else {
-						cout << name << " 은 회의에 참석 중입니다." << endl;
+						cout << "Cannot clear people list unless there are no meetings!" << endl;
 						return false;
 					}
 				}
@@ -592,7 +592,7 @@ bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, uno
 			cout << "Person " << name << " deleted" << endl;
 		}
 		else {
-			cerr << "이름이 " << name << " 인 Person이 People안에 존재 하지 않습니다." << endl;
+			cerr << "No person with that name!" << endl;
 		}
 	}
 	else {
@@ -619,7 +619,7 @@ bool dr_delRoom(vector<string>& words, unordered_map<int, Room>& roomList) {
 				cout << "Room " << roomId << " deleted \n";
 			}
 			else {
-				cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
+				cerr << "No room with that number!" << endl;
 			}
 		}
 		else {
@@ -652,11 +652,11 @@ bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList) {
 					cout << "Meeting at " << day << " " << time << " deleted \n";
 				}
 				else {
-					cerr << roomId << " 방에 Day: " << day << " Time: " << time << " 에 회의가 존재하지 않습니다." << endl;
+					cerr << "No meeting at that time!" << endl;
 				}
 			}
 			else {
-				cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
+				cerr << "No room with that number!" << endl;
 			}
 		}
 		else {
@@ -685,11 +685,11 @@ bool dm_delMeeting(int roomId_, string day_, double startTime_, unordered_map<in
 			meetingList.erase(meetingId);
 		}
 		else {
-			cerr << roomId << " 방에 Day: " << day << " Time: " << time << " 에 회의가 존재하지 않습니다." << endl;
+			cerr << "No meeting at that time!" << endl;
 		}
 	}
 	else {
-		cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
+		cerr << "No room with that number!" << endl;
 	}
 	return false;
 }
@@ -719,15 +719,15 @@ bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomLi
 						cout << "Participation " << name << " deleted"<<endl;
 					}
 					else {
-						cerr << "이름이 " << name << " 인 Participation이 존재하지 않습니다." << endl;
+						cerr << "This person is not a participant in the meeting!" << endl;
 					}
 				}
 				else {
-					cerr << roomId << " 방에 Day: " << day << " Time: " << time << " 에 회의가 존재하지 않습니다." << endl;
+					cerr << "No meeting at that time!" << endl;
 				}
 			}
 			else {
-				cerr << "방번호가 " << roomId << " 인 Room이 존재 하지 않습니다." << endl;
+				cerr << "No room with that number!" << endl;
 			}
 		}
 		else {
@@ -768,7 +768,7 @@ bool dg_delAllPerson(vector<string>& words, unordered_map<int, Room>& roomList, 
 				auto PersonList = meetingPtr->second.getParticipation();
 				if (PersonList.begin() != PersonList.end()) {	// 특정 회의 안에 사람이 있는 경우
 					noOneAttend = false;
-					cerr << "참석자가 포함된 미팅이 존재 합니다." << endl;
+					cerr << "Cannot clear people list unless there are no meetings!" << endl;
 					return false;
 				}
 			}

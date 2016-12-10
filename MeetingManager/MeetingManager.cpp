@@ -204,7 +204,7 @@ bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 		int roomId = stoi(words[1]);
 		unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
 		if (roomPtr == roomList.end()) {
-			cout << "There's no such room\n";
+			cout << "No room with that number!\n";
 			return false;
 		}
 		cout << "--- Room " << roomId << " ---" << endl;
@@ -251,7 +251,7 @@ bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 			if(isTime(startTime)) { throw invalid_argument("Time"); }
 			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
 			if (roomPtr == roomList.end()) {
-				cout << "There's no such room\n";
+				cout << "No room with that number!\n";
 				return false;
 			}
 			Meeting& meeting = roomPtr->second.getMeeting(day, startTime);

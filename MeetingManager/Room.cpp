@@ -95,8 +95,8 @@ Meeting& Room::getMeeting(string day, double startTime)
 {
 	//meeting 존재 확인
 	if (m_meetingList.find(getMeetingId(day, startTime)) == m_meetingList.end()) {
-		cout << "No room with that number!" << endl;
-		throw runtime_error("nosuchroom");
+		cout << "No meeting at that time!" << endl;
+		throw runtime_error("nosuchmeeting");
 	}
 	//meeting 반환
 	else

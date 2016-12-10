@@ -346,10 +346,6 @@ bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList, unor
 		int PersonNum = static_cast<int>(people.size());
 		int RoomNum = static_cast<int>(roomList.size());
 		double meetingNum = 0;
-		//if (PersonNum == 0 && RoomNum == 0) {
-		//	cout << "No data " << endl;
-		//	return false;
-		//}
 		for (auto& roomElement : roomList) {
 			meetingNum += roomElement.second.getMeetingList().size();
 		}
@@ -583,7 +579,7 @@ bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, uno
 					if (PersonList.find(name) == PersonList.end()) {	// 특정 회의에도 참석하지 않았을 경우
 					}
 					else {
-						cout << "Cannot clear people list unless there are no meetings!" << endl;
+						cout << "This person is a participant in a meeting!" << endl;
 						return false;
 					}
 				}
@@ -807,8 +803,8 @@ bool da_deleteAll(vector<string>& words, unordered_map<int, Room>& roomList, uno
 bool sd_saveFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
 	if (isCmNum(words, 2)) {
 		string filename = words[1]+".txt";
-		ofstream os(filename);
-
+		ofstream os;
+		os.open(filename);
 		//사람 정보 출력
 		cout << "[People]" << endl;
 		os << "[People]" << endl;
@@ -853,6 +849,7 @@ bool sd_saveFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 				}
 			}
 		}
+		os.close();
 	}
 	else {
 		cerr << "Invalid command : wrong input number \n";
@@ -864,17 +861,22 @@ bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 	if (isCmNum(words, 2)) {
 		string filename = words[1] + ".txt";
 		string command;
-		ifstream is(filename);
+		ifstream is;
+		is.open(filename);
 		vector<pair<string, vector<string>>> lines;
+		if (is.fail()) {																					// 파일 존재하지 않으면 오류 발생			
+			cerr << "The file does not exist!" << endl;
+			return false;
+		}
 		while (!is.eof()) {
 			getline(is, command);
 			istringstream is{ command };
-			vector<string> tokens{ istream_iterator<string> {is},istream_iterator<string> {} }; 	//명령어 토큰화
+			vector<string> tokens{ istream_iterator<string> {is},istream_iterator<string> {} }; 	// 명령어 토큰화
 			lines.push_back({ command,tokens });
 		}
 		vector<pair<string, vector<string>>> ::iterator linesPtr = lines.begin();
 		if (linesPtr->first != "[People]") {
-			cout << "불러올 파일이 저장 형식과 맞지 않습니다." << endl;
+			cerr << "The file to import does not match the save format!" << endl;
 			return false;
 		}
 		string Person_name, Person_email;
@@ -920,6 +922,7 @@ bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 				}
 			}
 		}
+		is.close();
 	}
 	else {
 		cerr << "Invalid command : wrong input number \n";

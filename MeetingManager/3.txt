@@ -1,12 +1,4 @@
 [People]
-<Person> kim kim@naver.com
-<Person> whang whang@naver.com
-[Room 1]
-<Meeting> M 12 15 overwatch
-<Participation> kim kim@naver.com
-<Participation> whang whang@naver.com
-<Meeting> T 9 12 opp
-<Participation> kim kim@naver.com
-[Room 2]
-<Meeting> M 9 12 kant
-<Participation> whang whang@naver.com
+No Person added
+[Room]
+No Room Exist

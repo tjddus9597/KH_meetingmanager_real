@@ -159,7 +159,7 @@ inline bool isDay(string& day)
 	else { return true; }
 }
 
-inline bool isTime(int time)
+inline bool isTime(double time)
 {
 	if (0 <= time && time <= 24) { return false; }
 	else { return true; }
@@ -188,7 +188,7 @@ bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people
 			cout << thisPerson->second.getName() << " " << thisPerson->second.getEmail() << endl;
 		}
 		else {
-			cout << "There no such person \n";
+			cout << "No person with that name!\n";
 		}
 	}
 	else {
@@ -343,8 +343,8 @@ bool pg_printEveryPerson(vector<string>& words, unordered_map<string, Person>& p
 bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people)
 {
 	if (isCmNum(words, 1)) {
-		int PersonNum = people.size();
-		int RoomNum = roomList.size();
+		int PersonNum = static_cast<int>(people.size());
+		int RoomNum = static_cast<int>(roomList.size());
 		double meetingNum = 0;
 		//if (PersonNum == 0 && RoomNum == 0) {
 		//	cout << "No data " << endl;

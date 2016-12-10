@@ -405,7 +405,9 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 			roomId = stoi(words[1]);
 			day = words[2];
 			startTime = stod(words[3]);
+			if (isTime(startTime)) { throw invalid_argument("Time"); }
 			endTime = stod(words[4]);
+			if (isTime(endTime)) { throw invalid_argument("Time"); }
 			topic = words[5];
 			unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId);
 			if (roomPtr == roomList.end()) {
@@ -643,6 +645,7 @@ bool dm_delMeeting(vector<string>& words, unordered_map<int, Room>& roomList) {
 			int roomId = stoi(words[1]);
 			string day = words[2];
 			double time = stod(words[3]);
+			if (isTime(time)) { throw invalid_argument("Time"); }
 			auto roomPtr = roomList.find(roomId);
 			if (roomPtr != roomList.end()) {	//roomList에 방번호가 roomId인 방이 존재하면
 				auto& meetingList = roomPtr->second.getMeetingList();	//	미팅리스트

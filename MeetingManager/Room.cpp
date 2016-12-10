@@ -77,7 +77,7 @@ void Room::delMeeting(string day, double startTime)
 {
 	//meeting 존재 확인
 	if (m_meetingList.find(getMeetingId(day, startTime)) == m_meetingList.end()) {
-		throw "No meeting for such day, time is founded \n";
+		throw "No meeting for such day, time is founded\n";
 	}
 	//meeting 삭제
 	else

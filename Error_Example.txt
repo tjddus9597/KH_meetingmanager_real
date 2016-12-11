@@ -1,0 +1,202 @@
+-------------------Start Scheduling-------------------
+
+1. Create a new file
+2. Load a file
+3. Quit the program
+Select the menu (1/2/3)? 1
+------------------------------------------------------
+Please Specify maximum meeting time
+Maximum meeting time : 3
+------------------------------------------------------
+Enter a command : xyz
+Unrecognized command!
+------------------------------------------------------
+Enter a command : ai Shinhye park@dgist.ac.kr
+Person Shinhye added
+------------------------------------------------------
+Enter a command : ai Shinhye park@dgist.ac.kr
+There is already a person with this name!
+------------------------------------------------------
+Enter a command : pi Dongwon
+No person with that name!
+------------------------------------------------------
+Enter a command : ar 1001
+Room 1001 added
+------------------------------------------------------
+Enter a command : ar 1001
+There is already a room with this number!
+------------------------------------------------------
+Enter a command : ar -1001
+Room number is not in range!
+------------------------------------------------------
+Enter a command : am 1001 M 10 12 Silly_Stuff
+Meeting added at M 10
+------------------------------------------------------
+Enter a command : am 1001 M 10 12 Important_Stuff
+There is already a meeting at that time!
+------------------------------------------------------
+Enter a command : am 1001 M 14 16 Important_Stuff
+Meeting added at M 14
+------------------------------------------------------
+Enter a command : ap 1001 M 10 Dongwon
+No person with that name!
+------------------------------------------------------
+Enter a command : am 1002 M 10 12 Other_Stuff
+No room with that number!
+------------------------------------------------------
+Enter a command : ar 1002
+Room 1002 added
+------------------------------------------------------
+Enter a command : am 1002 M 10 12 Other_Stuff
+Meeting added at M 10
+------------------------------------------------------
+Enter a command : am 1001 F 13 17 Strange_Stuff
+The maximum meeting time has been exceeded.
+------------------------------------------------------
+Enter a command : ap 1001 M 10 Shinhye
+Participation Shinhye added
+------------------------------------------------------
+Enter a command : ap 1001 M 10 Shinhye
+This person is already a participant!
+------------------------------------------------------
+Enter a command : ap 1002 M 10 Shinhye
+Participation in other rooms can not exist at the same time.
+------------------------------------------------------
+Enter a command : dp 1001 M 10 Shinhye
+Participation Shinhye deleted
+------------------------------------------------------
+Enter a command : dp 1001 M 10 Shinhye
+This person is not a participant in the meeting!
+------------------------------------------------------
+Enter a command : ap 1001 M 10 Shinhye
+Participation Shinhye added
+------------------------------------------------------
+Enter a command : pm 1001 M 13
+No meeting at that time!
+------------------------------------------------------
+Enter a command : pm 1003 M 10
+No room with that number!
+------------------------------------------------------
+Enter a command : pr 23
+No room with that number!
+------------------------------------------------------
+Enter a command : ps
+Information for 2 rooms:
+--- Room 1001 ---
+Meeting time: M 10, Topic: Silly_Stuff
+Participatns:
+Shinhye
+Meeting time: M 14, Topic: Important_Stuff
+Participatns: None
+--- Room 1002 ---
+Meeting time: M 10, Topic: Other_Stuff
+Participatns: None
+------------------------------------------------------
+Enter a command : dg
+Cannot clear people list unless there are no meetings!
+------------------------------------------------------
+Enter a command : di Shinhye
+This person is a participant in a meeting!
+------------------------------------------------------
+Enter a command : pg
+Information for 1 people:
+Shinhye park@dgist.ac.kr
+------------------------------------------------------
+Enter a command : ps
+Information for 2 rooms:
+--- Room 1001 ---
+Meeting time: M 10, Topic: Silly_Stuff
+Participatns:
+Shinhye
+Meeting time: M 14, Topic: Important_Stuff
+Participatns: None
+--- Room 1002 ---
+Meeting time: M 10, Topic: Other_Stuff
+Participatns: None
+------------------------------------------------------
+Enter a command : pa
+Persons : 1
+Meetings : 3
+Rooms : 2
+------------------------------------------------------
+Enter a command : ai Soohyun kim@dgist.ac.kr
+Person Soohyun added
+------------------------------------------------------
+Enter a command : pg
+Information for 2 people:
+Shinhye park@dgist.ac.kr
+Soohyun kim@dgist.ac.kr
+------------------------------------------------------
+Enter a command : ps
+Information for 2 rooms:
+--- Room 1001 ---
+Meeting time: M 10, Topic: Silly_Stuff
+Participatns:
+Shinhye
+Meeting time: M 14, Topic: Important_Stuff
+Participatns: None
+--- Room 1002 ---
+Meeting time: M 10, Topic: Other_Stuff
+Participatns: None
+------------------------------------------------------
+Enter a command : pa
+Persons : 2
+Meetings : 3
+Rooms : 2
+------------------------------------------------------
+Enter a command : sd output2
+[MaximumMeetingTime 3]
+[People]
+<Person> Shinhye park@dgist.ac.kr
+<Person> Soohyun kim@dgist.ac.kr
+[Room 1001]
+<Meeting> M 10 12 Silly_Stuff
+<Participation> Shinhye park@dgist.ac.kr
+<Meeting> M 14 16 Important_Stuff
+[Room 1002]
+<Meeting> M 10 12 Other_Stuff
+------------------------------------------------------
+Enter a command : ld NoFileName
+The file does not exist!
+------------------------------------------------------
+Enter a command : ld StrangeFile
+The file to import does not match the save format!
+------------------------------------------------------
+Enter a command : da
+All rooms are deleted
+All meetngs deleted
+All persons deleted
+------------------------------------------------------
+Enter a command : ld output2
+Maximum Meeting time is 3
+Person Shinhye added
+Person Soohyun added
+Room 1001 added
+Meeting added at M 10
+Participation Shinhye added
+Meeting added at M 14
+Room 1002 added
+Meeting added at M 10
+------------------------------------------------------
+Enter a command : pa
+Persons : 2
+Meetings : 3
+Rooms : 2
+------------------------------------------------------
+Enter a command : ps
+Information for 2 rooms:
+--- Room 1001 ---
+Meeting time: M 10, Topic: Silly_Stuff
+Participatns:
+Shinhye
+Meeting time: M 14, Topic: Important_Stuff
+Participatns: None
+--- Room 1002 ---
+Meeting time: M 10, Topic: Other_Stuff
+Participatns: None
+------------------------------------------------------
+Enter a command : qq
+All rooms are deleted
+All meetngs deleted
+All persons deleted
+Done

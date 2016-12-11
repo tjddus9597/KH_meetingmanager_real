@@ -1,0 +1,197 @@
+-------------------Start Scheduling-------------------
+
+1. Create a new file
+2. Load a file
+3. Quit the program
+Select the menu (1/2/3)? 1
+------------------------------------------------------
+Please Specify maximum meeting time
+Maximum meeting time : 4
+------------------------------------------------------
+Enter a command : pa
+Persons : 0
+Meetings : 0
+Rooms : 0
+------------------------------------------------------
+Enter a command : pg
+List of people is empty
+------------------------------------------------------
+Enter a command : ps
+List of rooms is empty
+------------------------------------------------------
+Enter a command : ai Dongwon kang@dgist.ac.kr
+Person Dongwon added
+------------------------------------------------------
+Enter a command : ai Soohyun kim@dgist.ac.kr
+Person Soohyun added
+------------------------------------------------------
+Enter a command : ai Shinhye park@dgist.ac.kr
+Person Shinhye added
+------------------------------------------------------
+Enter a command : pi Soohyun
+Soohyun kim@dgist.ac.kr
+------------------------------------------------------
+Enter a command : pg
+Information for 3 people:
+Dongwon kang@dgist.ac.kr
+Soohyun kim@dgist.ac.kr
+Shinhye park@dgist.ac.kr
+------------------------------------------------------
+Enter a command : ar 1001
+Room 1001 added
+------------------------------------------------------
+Enter a command : ar 1002
+Room 1002 added
+------------------------------------------------------
+Enter a command : am 1001 M 10 11 Music
+Meeting added at M 10
+------------------------------------------------------
+Enter a command : am 1001 Th 2 4 Literature
+Meeting added at Th 2
+------------------------------------------------------
+Enter a command : ap 1001 M 10 Dongwon
+Participation Dongwon added
+------------------------------------------------------
+Enter a command : ap 1001 M 10 Shinhye
+Participation Shinhye added
+------------------------------------------------------
+Enter a command : pr 1001
+--- Room 1001 ---
+Meeting time: M 10, Topic: Music
+Participatns:
+Dongwon
+Shinhye
+Meeting time: Th 2, Topic: Literature
+Participatns: None
+------------------------------------------------------
+Enter a command : pr 1002
+--- Room 1002 ---
+No meetings are scheduled
+------------------------------------------------------
+Enter a command : pm 1001 M 10
+Meeting time: M 10, Topic: Music
+Participatns:
+Dongwon
+Shinhye
+------------------------------------------------------
+Enter a command : pm 1001 Th 2
+Meeting time: Th 2, Topic: Literature
+Participatns: None
+------------------------------------------------------
+Enter a command : pa
+Persons : 3
+Meetings : 2
+Rooms : 2
+------------------------------------------------------
+Enter a command : ps
+Information for 2 rooms:
+--- Room 1001 ---
+Meeting time: M 10, Topic: Music
+Participatns:
+Dongwon
+Shinhye
+Meeting time: Th 2, Topic: Literature
+Participatns: None
+--- Room 1002 ---
+No meetings are scheduled
+------------------------------------------------------
+Enter a command : rm 1001 M 10 1002 T 3
+Meeting rescheduled to room 1002 at T 3
+------------------------------------------------------
+Enter a command : ps
+Information for 2 rooms:
+--- Room 1001 ---
+Meeting time: Th 2, Topic: Literature
+Participatns: None
+--- Room 1002 ---
+Meeting time: T 3, Topic: Music
+Participatns:
+Dongwon
+Shinhye
+------------------------------------------------------
+Enter a command : di Soohyun
+Person Soohyun deleted
+------------------------------------------------------
+Enter a command : dp 1002 T 3 Shinhye
+Participation Shinhye deleted
+------------------------------------------------------
+Enter a command : ps
+Information for 2 rooms:
+--- Room 1001 ---
+Meeting time: Th 2, Topic: Literature
+Participatns: None
+--- Room 1002 ---
+Meeting time: T 3, Topic: Music
+Participatns:
+Dongwon
+------------------------------------------------------
+Enter a command : dm 1002 T 3
+Meeting at T 3 deleted
+------------------------------------------------------
+Enter a command : pr 1002
+--- Room 1002 ---
+No meetings are scheduled
+------------------------------------------------------
+Enter a command : dr 1001
+Room 1001 deleted
+------------------------------------------------------
+Enter a command : pa
+Persons : 2
+Meetings : 0
+Rooms : 1
+------------------------------------------------------
+Enter a command : ps
+Information for 1 rooms:
+--- Room 1002 ---
+No meetings are scheduled
+------------------------------------------------------
+Enter a command : sd output
+[MaximumMeetingTime 4]
+[People]
+<Person> Dongwon kang@dgist.ac.kr
+<Person> Shinhye park@dgist.ac.kr
+[Room 1002]
+No Meeting Exist
+------------------------------------------------------
+Enter a command : ds
+All meetngs deleted
+------------------------------------------------------
+Enter a command : dg
+All persons deleted
+------------------------------------------------------
+Enter a command : da
+All rooms are deleted
+All meetngs deleted
+All persons deleted
+------------------------------------------------------
+Enter a command : ld output
+Maximum Meeting time is 4
+Person Dongwon added
+Person Shinhye added
+Room 1002 added
+------------------------------------------------------
+Enter a command : pa
+Persons : 2
+Meetings : 0
+Rooms : 1
+------------------------------------------------------
+Enter a command : ps
+Information for 1 rooms:
+--- Room 1002 ---
+No meetings are scheduled
+------------------------------------------------------
+Enter a command : da
+All rooms are deleted
+All meetngs deleted
+All persons deleted
+------------------------------------------------------
+Enter a command : pa
+Persons : 0
+Meetings : 0
+Rooms : 0
+------------------------------------------------------
+Enter a command : qq
+All rooms are deleted
+All meetngs deleted
+All persons deleted
+Done

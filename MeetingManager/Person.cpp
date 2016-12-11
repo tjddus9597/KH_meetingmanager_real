@@ -1,8 +1,12 @@
 #include "stdafx.h"
 #include "Person.h"
 #include <string>
+Person::Person() {}
 
-Person::Person(string name_ = NULL, string email_ = NULL) : name{ name_ }, email(email_) {}
+Person::Person(string name_, string email_) {
+	name = name_;
+	email = email_;
+}
 
 string Person::getName() const {
 	return name;

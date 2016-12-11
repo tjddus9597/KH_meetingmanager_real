@@ -22,12 +22,14 @@ bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);		//ap 명령어 처리 함수
 bool ag_addGroup(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people,int MaximumMeeting);
 bool ag_subParOverlap(unordered_map<int, Room>& roomList, int roomId, string day, int startTime, int endTime, string name);
+bool ag_addGroup(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people, int MaximumMeeting);
 bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people);
 bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);
 bool pm_printMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool pg_printEveryPerson(vector<string>& words, unordered_map<string, Person>& people);
 bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
+bool pt_printMaximumMeetingTime(vector<string>& words, int MaximumMeeting);
 bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool di_delPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);				//di 명령어 처리 함수
 bool dr_delRoom(vector<string>& words, unordered_map<int, Room>& roomList);															//dr 명령어 처리 함수

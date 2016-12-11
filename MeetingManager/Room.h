@@ -12,14 +12,14 @@ private:
 	
 public:
 	Room(int roomid);
-	bool isMeeting(string day, double starttime, double endtime);
-	bool Room::isMeetingEx(string oldDay, double oldStartTime, string newDay, double newStartTime, double newEndTime);
-	string getMeetingId(string day, double starttime);
+	bool isMeeting(string day, int starttime, int endtime);
+	bool Room::isMeetingEx(string oldDay, int oldStartTime, string newDay, int newStartTime, int newEndTime);
+	string getMeetingId(string day, int starttime);
 	unordered_map<string, Meeting>& getMeetingList();
-	Meeting& getMeeting(string day, double starttime);
-	double getRoomId();
-	bool addMeeting(string day, double starttime, double endtime, string topic);
-	void delMeeting(string day, double starttime);
+	Meeting& getMeeting(string day, int starttime);
+	int getRoomId();
+	bool addMeeting(string day, int starttime, int endtime, string topic);
+	void delMeeting(string day, int starttime);
 	~Room();
 };
 

@@ -1,5 +1,5 @@
 [People]
-<Person> Shinhye park@dgist.ac.kr
+<Person> Shinhye hwang@dgist.ac.kr
 [Room 1001]
 <Meeting> M 10 12 Silly_Stuff
-<Participation> Shinhye park@dgist.ac.kr
+<Participation> Shinhye hwang@dgist.ac.kr

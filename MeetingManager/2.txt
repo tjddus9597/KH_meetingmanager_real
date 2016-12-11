@@ -1,10 +1,11 @@
 [People]
-<Person> Dongwon kang@dgist.ac.kr
-<Person> Shinhye park@dgist.ac.kr
-<Person> Soohyun kim@dgist.ac.kr
+<Person> Dongwon kang
+<Person> Soohyun kim
+<Person> Shinhye park
 [Room 1001]
+<Meeting> M 10 11 Music
+<Participation> Dongwon kang
+<Participation> Shinhye park
 <Meeting> Th 2 4 Literature
 [Room 1002]
-<Meeting> T 3 4 Music
-<Participation> Dongwon kang@dgist.ac.kr
-<Participation> Shinhye park@dgist.ac.kr
+No Meeting Exist

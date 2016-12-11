@@ -16,21 +16,21 @@ Room::Room(int roomId):
 /*meeting 아이디를 계산한다.
 * 이는 meetingList의 key값으로 활용된다.
 */
-string Room::getMeetingId(string day, double startTime)
+string Room::getMeetingId(string day, int startTime)
 {
 	return day + "_" + to_string(startTime);
 }
 
 /*RoomId 반환
 */
-double Room::getRoomId()
+int Room::getRoomId()
 {
 	return m_roomId;
 }
 
 /*해당 시간 구간에 meeting이 존재하는지를 검사한다.
 */
-bool Room::isMeeting(string day, double startTime, double endTime)
+bool Room::isMeeting(string day, int startTime, int endTime)
 {
 	for (auto it = m_meetingList.begin(); it != m_meetingList.end(); ++it) {
 		if (!((day != it->second.getDay()) || (startTime >= it->second.getEndTime()) || (endTime <= it->second.getStartTime()))) {
@@ -40,7 +40,7 @@ bool Room::isMeeting(string day, double startTime, double endTime)
 	return false;
 }
 
-bool Room::isMeetingEx(string oldDay, double oldStartTime, string newDay, double newStartTime, double newEndTime)
+bool Room::isMeetingEx(string oldDay, int oldStartTime, string newDay, int newStartTime, int newEndTime)
 {	
 	for (auto it = m_meetingList.begin(); it != m_meetingList.end(); ++it) {
 		if ((it != m_meetingList.find(getMeetingId(oldDay,oldStartTime)))&&(!((newDay != it->second.getDay()) ||
@@ -55,7 +55,7 @@ bool Room::isMeetingEx(string oldDay, double oldStartTime, string newDay, double
 /*meeting을 추가한다.
 * 시간이 겹치는지 확인이 필요하다.
 */
-bool Room::addMeeting(string day, double startTime, double endTime, string topic)
+bool Room::addMeeting(string day, int startTime, int endTime, string topic)
 {	
 	//meeting 시간 겹치는지 확인
 	if (isMeeting(day,startTime,endTime)) {
@@ -73,7 +73,7 @@ bool Room::addMeeting(string day, double startTime, double endTime, string topic
 /*meeting을 삭제한다. 
 * 해당 meeting이 존재하는지 확인한다.
 */
-void Room::delMeeting(string day, double startTime)
+void Room::delMeeting(string day, int startTime)
 {
 	//meeting 존재 확인
 	if (m_meetingList.find(getMeetingId(day, startTime)) == m_meetingList.end()) {
@@ -91,7 +91,7 @@ unordered_map<string, Meeting>& Room::getMeetingList() {
 /*해당하는 meeting을 반환한다. 
 * 해당 meeting이 존재하는지 확인한다.
 */
-Meeting& Room::getMeeting(string day, double startTime)
+Meeting& Room::getMeeting(string day, int startTime)
 {
 	//meeting 존재 확인
 	if (m_meetingList.find(getMeetingId(day, startTime)) == m_meetingList.end()) {

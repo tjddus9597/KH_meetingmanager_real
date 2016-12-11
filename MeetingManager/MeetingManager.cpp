@@ -258,19 +258,20 @@ bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomL
 			unordered_map<string, Meeting>& meetingList = roomElement.second.getMeetingList();
 			if (meetingList.size() == 0) {
 				cout << "No meetings are scheduled" << endl;
-				return false;
 			}
-			for (auto& meetingElement : meetingList) {
-				cout << "Meeting time: " << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << ", Topic: " <<
-					meetingElement.second.getTopic() << endl;
-				unordered_map<string, Person>& parList = meetingElement.second.getParticipation();
-				cout << "Participatns: ";
-				for (auto& personElement : parList) {
-					cout << endl << personElement.second.getName();
+			else {
+				for (auto& meetingElement : meetingList) {
+					cout << "Meeting time: " << meetingElement.second.getDay() << " " << meetingElement.second.getStartTime() << ", Topic: " <<
+						meetingElement.second.getTopic() << endl;
+					unordered_map<string, Person>& parList = meetingElement.second.getParticipation();
+					cout << "Participatns: ";
+					for (auto& personElement : parList) {
+						cout << endl << personElement.second.getName();
+					}
+					if (parList.size() == 0)
+						cout << "None";
+					cout << endl;
 				}
-				if (parList.size() == 0)
-					cout << "None";
-				cout << endl;
 			}
 		}
 	}
@@ -373,7 +374,7 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList,i
 				cout << "Endtime is faster (or same) as start time" << endl;
 				return false;
 			}
-			if (endTime - startTime >= MaximumMeeting) {
+			if (endTime - startTime > MaximumMeeting) {
 				cout << "The maximum meeting time has been exceeded." << endl;
 				return false;
 			}
@@ -454,8 +455,9 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 			for (auto roomElement : roomList) {
 				auto MeetingList = roomElement.second.getMeetingList();
 				for (auto MeetingPtr = MeetingList.begin(); MeetingPtr != MeetingList.end(); ++MeetingPtr) {
-					if ((roomId != roomElement.first) && (day == MeetingPtr->second.getDay()) && (time >= MeetingPtr->second.getStartTime()) 
-						&& (time <= MeetingPtr->second.getEndTime()) && MeetingPtr->second.getParticipation().find(name) != MeetingPtr->second.getParticipation().end()) {
+					if ((roomId != roomElement.first) && (day == MeetingPtr->second.getDay())
+						&& (!(time >= MeetingPtr->second.getEndTime() || roomList.find(roomId)->second.getMeeting(day,time).getEndTime()<= MeetingPtr->second.getStartTime()))
+						&& MeetingPtr->second.getParticipation().find(name) != MeetingPtr->second.getParticipation().end()) {			
 						cout << "Participation in other rooms can not exist at the same time." << endl;							// 다른 방, 같은 시간에 Participation이 들어가면 발생
 						return false;
 					}
@@ -846,7 +848,7 @@ bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 		ifstream is;
 		is.open(filename);
 		vector<pair<string, vector<string>>> lines;
-		if (is.fail()) {																					// 파일 존재하지 않으면 오류 발생			
+		if (is.fail()) {																			// 파일 존재하지 않으면 오류 발생			
 			cerr << "The file does not exist!" << endl;
 			return false;
 		}

@@ -1,12 +1,13 @@
-[MaximumMeetingTime 3]
+[MaximumMeetingTime 4]
 [People]
-<Person> Dongwon kang
-<Person> Soohyun kim
-<Person> Shinhye park
-[Room 1001]
-<Meeting> M 10 11 Music
-<Participation> Dongwon kang
-<Participation> Shinhye park
-<Meeting> Th 2 4 Literature
-[Room 1002]
+<Person> kim kim@naver.com
+<Person> whang kim@naver.com
+[Room 1000]
+No Meeting Exist
+[Room 2000]
+<Meeting> M 10 14 over
+<Participation> whang kim@naver.com
+<Meeting> M 14 16 over
+<Participation> kim kim@naver.com
+[Room 1000000]
 No Meeting Exist

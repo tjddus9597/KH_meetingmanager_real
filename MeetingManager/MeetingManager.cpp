@@ -12,7 +12,7 @@
 #include<fstream>
 #include"MeetingManager.h"
 
-bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person>& people)
+bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person>& people, int MaximumMeeting)
 {
 	//명령어 입력
 	string command;
@@ -21,7 +21,6 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	if (command == "") { return false; }
 	istringstream is{ command };
 	vector<string> words{ istream_iterator<string> {is},istream_iterator<string> {} }; 	//명령어 토큰화
-
 
 	bool isQuit = false;
 	//명령어 해석 및 실행
@@ -32,7 +31,7 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 		isQuit = ar_insrtRoom(words, roomList);
 	}
 	else if (words[0] == "am") {
-		isQuit = am_insrtMeeting(words, roomList);
+		isQuit = am_insrtMeeting(words, roomList,MaximumMeeting);
 	}
 	else if (words[0] == "ai") {
 		isQuit = ai_insrtPerson(words, people);
@@ -83,10 +82,10 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 		isQuit = da_deleteAll(words, roomList, people);
 	}
 	else if (words[0] == "sd") {
-		isQuit = sd_saveFile(words, roomList, people);
+		isQuit = sd_saveFile(words, roomList, people,MaximumMeeting);
 	}
 	else if (words[0] == "ld") {
-		isQuit = ld_loadFile(words, roomList, people);
+		isQuit = ld_loadFile(words, roomList, people,MaximumMeeting);
 	}
 	else {
 		cerr << "Unrecognized command!\n";
@@ -348,7 +347,7 @@ bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 }
 
 //회의 추가 함수
-bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
+bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList,int MaximumMeeting)
 {
 	int roomId;
 	string day;
@@ -374,6 +373,10 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 				cout << "Endtime is faster (or same) as start time" << endl;
 				return false;
 			}
+			if (endTime - startTime >= MaximumMeeting) {
+				cout << "The maximum meeting time has been exceeded." << endl;
+				return false;
+			}
 			if (roomPtr->second.addMeeting(day, startTime, endTime, topic)) {
 				return false;
 			}
@@ -394,7 +397,7 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 }
 
 //함수 추가 함수 오버로딩
-bool am_insrtMeeting(int roomId_, string day_, int startTime_, int endTime_,string topic_, unordered_map<int, Room>& roomList)
+bool am_insrtMeeting(int roomId_, string day_, int startTime_, int endTime_,string topic_, unordered_map<int, Room>& roomList, int MaximumMeeting)
 {
 	unordered_map<int, Room>::iterator roomPtr = roomList.find(roomId_);
 	if (roomPtr == roomList.end()) {
@@ -402,6 +405,10 @@ bool am_insrtMeeting(int roomId_, string day_, int startTime_, int endTime_,stri
 		return false;
 	}
 	if (roomPtr->second.addMeeting(day_, startTime_, endTime_, topic_)) {
+		return false;
+	}
+	if (endTime_ - startTime_ >= MaximumMeeting) {
+		cout << "The maximum meeting time has been exceeded." << endl;
 		return false;
 	}
 	cout << "Meeting added at" << day_ << " " << startTime_ << endl;
@@ -446,6 +453,16 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 			}
 			if (roomPtr->second.getMeeting(day, time).addParticipation(people, name)) {
 				return false;	// 오류 발생
+			}
+			for (auto roomElement : roomList) {
+				auto MeetingList = roomElement.second.getMeetingList();
+				for (auto MeetingPtr = MeetingList.begin(); MeetingPtr != MeetingList.end(); ++MeetingPtr) {
+					if ((roomId != roomElement.first) && (day == MeetingPtr->second.getDay()) && (time >= MeetingPtr->second.getStartTime()) 
+						&& (time <= MeetingPtr->second.getEndTime()) && MeetingPtr->second.getParticipation().find(name) != MeetingPtr->second.getParticipation().end()) {
+						cout << "Participation in other rooms can not exist at the same time." << endl;							// 다른 방, 같은 시간에 Participation이 들어가면 발생
+						return false;
+					}
+				}
 			}
 			cout << "Participation "<< name << " added \n";
 		}
@@ -763,12 +780,14 @@ bool da_deleteAll(vector<string>& words, unordered_map<int, Room>& roomList, uno
 
 /*sd filename: 현재 회의실, 사람, 회의에 관한 정보를 파일에 저장. 오류: 파일이름에 해당하는 파일이 열리지 않을 때*/
 
-bool sd_saveFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
+bool sd_saveFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people, int MaximumMeeting) {
 	if (isCmNum(words, 2)) {
 		string filename = words[1]+".txt";
 		ofstream os;
 		os.open(filename);
 		//사람 정보 출력
+		cout << "[MaximumMeetingTime " << MaximumMeeting << "]" << endl;
+		os << "[MaximumMeetingTime " << MaximumMeeting << "]" << endl;
 		cout << "[People]" << endl;
 		os << "[People]" << endl;
 		if (people.size() == 0) {
@@ -820,7 +839,7 @@ bool sd_saveFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 	return false;
 }
 
-bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people) {
+bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people,int& MaximumMeeting) {
 	if (isCmNum(words, 2)) {
 		string filename = words[1] + ".txt";
 		string command;
@@ -831,6 +850,9 @@ bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 			cerr << "The file does not exist!" << endl;
 			return false;
 		}
+		// 기존 작업 삭제
+		roomList.clear();	// 모든 회의실, 회의 삭제
+		people.clear();		// 모든 개인 삭제
 		while (!is.eof()) {
 			getline(is, command);
 			istringstream is{ command };
@@ -838,14 +860,21 @@ bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 			lines.push_back({ command,tokens });
 		}
 		vector<pair<string, vector<string>>> ::iterator linesPtr = lines.begin();
-		if (linesPtr->first != "[People]") {
+		if (linesPtr->second[0] != "[MaximumMeetingTime") {
 			cerr << "The file to import does not match the save format!" << endl;
 			return false;
 		}
+		// 최대 회의시간 불러오기
+		string MaximumMeetingTime;
+		MaximumMeetingTime = linesPtr->second[1];
+		MaximumMeetingTime.erase(MaximumMeetingTime.find("]"));
+		MaximumMeeting = stoi(MaximumMeetingTime);
+		cout << "Maximum Meeting time is " << MaximumMeeting << endl;
+		// People 불러오기
 		string Person_name, Person_email;
 		string roomId, day, startTime, endTime, topic, name, email;
 		vector<string> words_ai, words_ar, words_am, words_ap;
-		for (linesPtr++; linesPtr!=lines.end(); linesPtr++) {
+		for (linesPtr+2; linesPtr!=lines.end(); linesPtr++) {
 			if (linesPtr->first != "") {
 				//Person 삽입
 				if (linesPtr->second[0] == "<Person>" ) {
@@ -874,7 +903,7 @@ bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unor
 					endTime = linesPtr->second[3];
 					topic = linesPtr->second[4];
 					words_am = { "am",roomId, day,startTime,endTime,topic };
-					am_insrtMeeting(words_am, roomList);
+					am_insrtMeeting(words_am, roomList, MaximumMeeting);
 				}
 				//Participation 삽입
 				else if (linesPtr->second[0] == "<Participation>") {	

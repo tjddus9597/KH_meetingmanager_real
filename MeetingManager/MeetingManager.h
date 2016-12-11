@@ -12,11 +12,11 @@
 #include<stdexcept>
 #include<fstream>
 
-bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
-inline bool isCmNum(vector<string>& words, int validNum);																		//명령어 길이 확인 함수
+bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person>& people, int MaximumMeeting);
+inline bool isCmNum(vector<string>& words, int validNum);																		    //명령어 길이 확인 함수
 bool qq_Quit(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList);												 	    //ar 명령어 처리 함수
-bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList);													//am 명령어 처리 함수
+bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList, int MaximumMeeting);								//am 명령어 처리 함수
 bool am_insrtMeeting(int roomId_, string day_, int startTime_, int endTime_, string topic_, unordered_map<int, Room>& roomList);
 bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people);													//ai 명령어 처리 함수
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);		//ap 명령어 처리 함수
@@ -35,5 +35,5 @@ bool dp_delParticipation(vector<string>& words, unordered_map<int, Room>& roomLi
 bool ds_delAllMeeting(vector<string>& words, unordered_map<int, Room>& roomList);
 bool dg_delAllPerson(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 bool da_deleteAll(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
-bool sd_saveFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
-bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
+bool sd_saveFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people,int MaximumMeeting);
+bool ld_loadFile(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people, int& MaximumMeeting);

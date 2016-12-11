@@ -1,3 +1,4 @@
+[MaximumMeetingTime 4]
 [People]
 <Person> Dongwon kang
 <Person> Soohyun kim

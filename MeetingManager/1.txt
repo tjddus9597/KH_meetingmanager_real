@@ -1,5 +1,12 @@
+[MaximumMeetingTime 3]
 [People]
-<Person> Shinhye hwang@dgist.ac.kr
+<Person> Dongwon kang
+<Person> Soohyun kim
+<Person> Shinhye park
 [Room 1001]
-<Meeting> M 10 12 Silly_Stuff
-<Participation> Shinhye hwang@dgist.ac.kr
+<Meeting> M 10 11 Music
+<Participation> Dongwon kang
+<Participation> Shinhye park
+<Meeting> Th 2 4 Literature
+[Room 1002]
+No Meeting Exist

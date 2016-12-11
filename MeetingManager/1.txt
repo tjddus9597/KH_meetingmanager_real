@@ -1,5 +1,13 @@
+[MaximumMeetingTime 4]
 [People]
-<Person> hwang h
-<Person> kim h
-[Room 103]
-<Meeting> M 9 12 overwatch
+<Person> kim kim@naver.com
+<Person> whang kim@naver.com
+[Room 1000]
+No Meeting Exist
+[Room 2000]
+<Meeting> M 10 14 over
+<Participation> whang kim@naver.com
+<Meeting> M 14 16 over
+<Participation> kim kim@naver.com
+[Room 1000000]
+No Meeting Exist

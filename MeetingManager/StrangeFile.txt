@@ -1,0 +1,5 @@
+오류발생
+[People]
+<Person> kim kim@naver.com
+[Room 1000]
+No Meeting Exist

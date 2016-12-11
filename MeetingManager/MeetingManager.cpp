@@ -41,7 +41,7 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 		isQuit = ap_insrtParticipation(words, roomList, people);
 	}
 	else if (words[0] == "ag") {
-		isQuit = ag_addGroup(words, roomList, people);
+		isQuit = ag_addGroup(words, roomList, people,MaximumMeeting);
 	}
 	else if (words[0] == "pi") {
 		isQuit = pi_printPerson(words, people);
@@ -488,7 +488,7 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 	return false;
 }
 
-bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unordered_map<string, Person>& people)
+bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unordered_map<string, Person>& people, int MaximumMeeting)
 {	
 	try {
 		if (!(isCmNum(words, 0) || isCmNum(words, 1) || isCmNum(words, 2) || isCmNum(words,3))) {
@@ -611,7 +611,7 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 				}
 				else if (choice == "1") {
 					vector<string> newWord_am = { "am",to_string(roomId),chosenMeeting[0].c_day,to_string(chosenMeeting[0].c_startTime),to_string(chosenMeeting[0].c_endTime), topic };
-					am_insrtMeeting(newWord_am, roomList);
+					am_insrtMeeting(newWord_am, roomList, MaximumMeeting);
 					for (auto& person : nameList) {
 						vector<string> newWord_ap = { "ap",to_string(roomId),chosenMeeting[0].c_day,to_string(chosenMeeting[0].c_startTime), person};
 						ap_insrtParticipation(newWord_ap, roomList, people);
@@ -620,7 +620,7 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 				}
 				else if ((choice == "2") && (count >= 2)) {
 					vector<string> newWord_am = { "am",to_string(roomId),chosenMeeting[1].c_day, to_string(chosenMeeting[1].c_startTime),to_string(chosenMeeting[1].c_endTime), topic };
-					am_insrtMeeting(newWord_am, roomList);
+					am_insrtMeeting(newWord_am, roomList, MaximumMeeting);
 					for (auto& person : nameList) {
 						vector<string> newWord_ap = { "ap",to_string(roomId),chosenMeeting[1].c_day,to_string(chosenMeeting[1].c_startTime), person };
 						ap_insrtParticipation(newWord_ap, roomList, people);
@@ -629,7 +629,7 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 				}
 				else if ((choice == "3") && (count >= 3)) {
 					vector<string> newWord_am = { "am", to_string(roomId),chosenMeeting[2].c_day, to_string(chosenMeeting[2].c_startTime),to_string(chosenMeeting[2].c_endTime), topic };
-					am_insrtMeeting(newWord_am, roomList);
+					am_insrtMeeting(newWord_am, roomList, MaximumMeeting);
 					for (auto& person : nameList) {
 						vector<string> newWord_ap = { "ap",to_string(roomId),chosenMeeting[2].c_day,to_string(chosenMeeting[2].c_startTime), person };
 						ap_insrtParticipation(newWord_ap, roomList, people);

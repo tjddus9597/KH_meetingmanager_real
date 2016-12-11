@@ -20,7 +20,7 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList, 
 bool am_insrtMeeting(int roomId_, string day_, int startTime_, int endTime_, string topic_, unordered_map<int, Room>& roomList);
 bool ai_insrtPerson(vector<string>& words, unordered_map<string, Person>& people);													//ai 명령어 처리 함수
 bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);		//ap 명령어 처리 함수
-bool ag_addGroup(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
+bool ag_addGroup(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people,int MaximumMeeting);
 bool ag_subParOverlap(unordered_map<int, Room>& roomList, int roomId, string day, int startTime, int endTime, string name);
 bool pi_printPerson(vector<string>& words, unordered_map<string, Person>& people);
 bool pr_printRoom(vector<string>& words, unordered_map<int, Room>& roomList);

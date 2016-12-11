@@ -1,0 +1,7 @@
+[People]
+<Person> hwang s
+<Person> kim s
+[Room 103]
+No Meeting Exist
+[Room 105]
+No Meeting Exist

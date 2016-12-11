@@ -1,5 +1,5 @@
 [People]
-<Person> Shinhye hwang@dgist.ac.kr
-[Room 1001]
-<Meeting> M 10 12 Silly_Stuff
-<Participation> Shinhye hwang@dgist.ac.kr
+<Person> hwang h
+<Person> kim h
+[Room 103]
+<Meeting> M 9 12 overwatch

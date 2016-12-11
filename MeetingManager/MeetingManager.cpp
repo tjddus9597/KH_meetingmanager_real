@@ -11,6 +11,7 @@
 #include<stdexcept>
 #include<fstream>
 #include"MeetingManager.h"
+#include<time.h>
 
 bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person>& people)
 {
@@ -39,6 +40,9 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	}
 	else if (words[0] == "ap") {
 		isQuit = ap_insrtParticipation(words, roomList, people);
+	}
+	else if (words[0] == "ag") {
+		isQuit = ag_addGroup(words, roomList, people);
 	}
 	else if (words[0] == "pi") {
 		isQuit = pi_printPerson(words, people);
@@ -110,7 +114,7 @@ inline bool isDay(string& day)
 {
 	if (day == "M") { return false; }
 	else if (day == "T") { return false; }
-	else if (day == "TW") { return false; }
+	else if (day == "W") { return false; }
 	else if (day == "Th") { return false; }
 	else if (day == "F") { return false; }
 	else if (day == "Sa") { return false; }
@@ -246,7 +250,7 @@ bool ps_printEveryMeeting(vector<string>& words, unordered_map<int, Room>& roomL
 		int meetingNum = 0;
 		int roomNum = 0;
 		for (auto& roomElements : roomList) {
-			meetingNum += roomElements.second.getMeetingList().size();
+			meetingNum += static_cast<int>(roomElements.second.getMeetingList().size());
 			roomNum++;
 		}
 		if (roomNum == 0) {
@@ -306,7 +310,7 @@ bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList, unor
 		int RoomNum = static_cast<int>(roomList.size());
 		int meetingNum = 0;
 		for (auto& roomElement : roomList) {
-			meetingNum += roomElement.second.getMeetingList().size();
+			meetingNum += static_cast<int>(roomElement.second.getMeetingList().size());
 		}
 		cout << "Persons : " << PersonNum << endl;
 		cout << "Meetings : " << meetingNum << endl;
@@ -387,7 +391,7 @@ bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 		cerr << "Room number is not in range!" << endl;
 	}
 	catch (invalid_argument) {
-		cerr << "Invalid argument" << endl;
+		cerr << "Invalid argument : " << endl;
 	}
 
 	return false; //다시 명령어 입력 받음
@@ -465,6 +469,185 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 	return false;
 }
 
+bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unordered_map<string, Person>& people)
+{	
+	try {
+		if (!(isCmNum(words, 0) || isCmNum(words, 1) || isCmNum(words, 2) || isCmNum(words,3))) {
+			int roomId = stoi(words[1]);
+			if (roomId < 0) { throw out_of_range("Minus"); }
+			int timeLength = stoi(words[2]);
+			if (isTime(timeLength)) { throw invalid_argument("Time"); }
+			string topic = words[3];
+			vector<string>::iterator it = words.begin();
+			vector<string> nameList;
+			it += 4;
+			for (it; it == words.end(); ++it) {
+				if (people.find(*it) == people.end()) {
+					cerr << "No person with that name!" << endl;
+					return false;
+				}
+				nameList.emplace_back(*it);
+			}
+			if (roomList.find(roomId) == roomList.end()) {
+				cerr << "No room with that number!" << endl;
+				return false;
+			}
+			auto roomPtr = roomList.find(roomId);
+
+			//오늘 시간,요일 받아오기.
+			const string DAY[] = { "Su", "M", "T", "W", "Th", "F", "Sa" };
+			time_t rawtime;
+			struct tm timeinfo;
+			time(&rawtime);
+			localtime_s(&timeinfo, &rawtime);
+			int wday = timeinfo.tm_wday;
+			int time = timeinfo.tm_hour;
+			string day = DAY[wday];
+
+			//선정 미팅 담을 변수
+			struct meetingChoice {
+				string c_day;
+				int c_startTime;
+				int c_endTime;
+			};
+			vector<meetingChoice> chosenMeeting(3);
+
+
+			bool hasMeeting = false;
+			int count = 0;
+
+			//오늘
+			int _startTime = time+1;
+			int _endTime = _startTime + timeLength;
+			for (; _endTime < 24; ++_startTime) {
+				_endTime = _startTime + timeLength;
+				if (!(roomPtr->second.isMeeting(day, _startTime, _endTime))) {	//비는 시간이 있다면
+					for (auto& name:nameList) {	//현재 참여 예정자들에 대해서
+						if (ag_subParOverlap(roomList, roomId, day, _startTime, _endTime, name)) {
+							hasMeeting = true;
+							break;
+						}
+					}
+					if (!hasMeeting) {
+						chosenMeeting[count].c_day = day;
+						chosenMeeting[count].c_startTime = _startTime;
+						chosenMeeting[count].c_endTime = _endTime;
+						++count;
+						break;
+					}
+				}
+				hasMeeting = false;
+			}
+
+			//다음날부터
+			++wday;
+			for (;!((wday > 6)||(count >= 3));++wday) {
+				int startTime = 9;
+				int endTime = 0;
+				for (; !((endTime > 23)||(count >= 3)); ++startTime) {
+					endTime = startTime + timeLength;
+					if (!(roomPtr->second.isMeeting(DAY[wday], startTime, endTime))) {	//비는 시간이 있다면
+						for (auto& name : nameList) {	//현재 참여 예정자들에 대해서
+							if (ag_subParOverlap(roomList, roomId, DAY[wday], startTime, endTime, name)) {
+								hasMeeting = true;
+								break;
+							}
+						}
+						if (!hasMeeting) {
+							chosenMeeting[count].c_day = DAY[wday];
+							chosenMeeting[count].c_startTime = startTime;
+							chosenMeeting[count].c_endTime = endTime;
+							++count;
+							break;
+						}
+					}
+					hasMeeting = false;
+				}
+			}
+
+			cout << "Possible meeting time:" << endl;
+			if (count == 0) {
+				cout << "No possible meeting!\n";
+				return false;
+			}
+
+			for (int n = 0; n < count; ++n) {
+				cout << n + 1 << ". " << chosenMeeting[n].c_day << " " << chosenMeeting[n].c_startTime << "-" 
+					<< chosenMeeting[n].c_endTime <<endl;
+			}
+
+			cout << "What to add meeting (n";
+			for (int n = 0; n < count; ++n) {
+				cout << "/" << n + 1;
+			}
+			cout << ")?" << endl;
+
+			string choice;
+			while (1) {
+				getline(cin, choice);
+
+				if (choice == "n") {
+					cout << "Command canceled" << endl;
+					break;
+				}
+				else if (choice == "1") {
+					vector<string> newWord_am = { "am",to_string(roomId),chosenMeeting[0].c_day,to_string(chosenMeeting[0].c_startTime),to_string(chosenMeeting[0].c_endTime), topic };
+					am_insrtMeeting(newWord_am, roomList);
+					for (auto& person : nameList) {
+						vector<string> newWord_ap = { "ap",to_string(roomId),chosenMeeting[0].c_day,to_string(chosenMeeting[0].c_startTime), person};
+						ap_insrtParticipation(newWord_ap, roomList, people);
+					}
+					break;
+				}
+				else if ((choice == "2") && (count >= 2)) {
+					vector<string> newWord_am = { "am",to_string(roomId),chosenMeeting[1].c_day, to_string(chosenMeeting[1].c_startTime),to_string(chosenMeeting[1].c_endTime), topic };
+					am_insrtMeeting(newWord_am, roomList);
+					for (auto& person : nameList) {
+						vector<string> newWord_ap = { "ap",to_string(roomId),chosenMeeting[1].c_day,to_string(chosenMeeting[1].c_startTime), person };
+						ap_insrtParticipation(newWord_ap, roomList, people);
+					}
+					break;
+				}
+				else if ((choice == "3") && (count >= 3)) {
+					vector<string> newWord_am = { "am", to_string(roomId),chosenMeeting[2].c_day, to_string(chosenMeeting[2].c_startTime),to_string(chosenMeeting[2].c_endTime), topic };
+					am_insrtMeeting(newWord_am, roomList);
+					for (auto& person : nameList) {
+						vector<string> newWord_ap = { "ap",to_string(roomId),chosenMeeting[2].c_day,to_string(chosenMeeting[2].c_startTime), person };
+						ap_insrtParticipation(newWord_ap, roomList, people);
+					}
+					break;
+				}
+				else {
+					cerr << "Invalid command" << endl;
+				}
+			}
+		}
+		else {
+			cerr << "Invalid command : wrong input number" << endl;
+		}
+	}
+	catch (out_of_range) {
+		cerr << "Room number is not in range!" << endl;
+	}
+	catch (invalid_argument) {
+		cerr << "Invalid argument" << endl;
+	}
+	return false;
+}
+
+bool ag_subParOverlap(unordered_map<int, Room>& roomList,int roomId, string day, int startTime, int endTime, string name)
+{
+	for (auto roomElement : roomList) {
+		auto MeetingList = roomElement.second.getMeetingList();
+		for (auto MeetingPtr = MeetingList.begin(); MeetingPtr != MeetingList.end(); ++MeetingPtr) {
+			if ((roomId != roomElement.first) && (day == MeetingPtr->second.getDay()) && !((startTime >= MeetingPtr->second.getEndTime())
+				|| (endTime <= MeetingPtr->second.getStartTime())) && MeetingPtr->second.getParticipation().find(name) != MeetingPtr->second.getParticipation().end()) {
+				return true; // 다른 방, 같은 시간에 Participation이 들어가면 발생
+			}
+		}
+	}
+	return false;
+}
 
 bool rm_replaceMeeting(vector<string>& words, unordered_map<int, Room>& roomList)
 {

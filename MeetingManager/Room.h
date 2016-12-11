@@ -13,7 +13,7 @@ private:
 public:
 	Room(int roomid);
 	bool isMeeting(string day, int starttime, int endtime);
-	bool Room::isMeetingEx(string oldDay, int oldStartTime, string newDay, int newStartTime, int newEndTime);
+	bool isMeetingEx(string oldDay, int oldStartTime, string newDay, int newStartTime, int newEndTime);
 	string getMeetingId(string day, int starttime);
 	unordered_map<string, Meeting>& getMeetingList();
 	Meeting& getMeeting(string day, int starttime);

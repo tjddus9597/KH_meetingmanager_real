@@ -61,6 +61,9 @@ bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person
 	else if (words[0] == "pa") {
 		isQuit = pa_printAll(words, roomList, people);
 	}
+	else if (words[0] == "pt") {
+		isQuit = pt_printMaximumMeetingTime(words, MaximumMeeting);
+	}
 	else if (words[0] == "rm") {
 		isQuit = rm_replaceMeeting(words, roomList);
 	}
@@ -322,6 +325,18 @@ bool pa_printAll(vector<string>& words, unordered_map<int, Room>& roomList, unor
 	return false;
 }
 
+bool pt_printMaximumMeetingTime(vector<string>& words, int MaximumMeeting)
+{
+	if (isCmNum(words, 1)) {
+		cout << "Maximum Meeting Time is " << MaximumMeeting << endl;
+	}
+	else {
+		cerr << "Invalid command : wrong input number \n";
+	}
+	return false;
+}
+
+
 //방 추가 명령어 함수
 bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList)
 {
@@ -491,7 +506,7 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unordered_map<string, Person>& people, int MaximumMeeting)
 {	
 	try {
-		if (!(isCmNum(words, 0) || isCmNum(words, 1) || isCmNum(words, 2) || isCmNum(words,3))) {
+		if (!(isCmNum(words, 0) || isCmNum(words, 1) || isCmNum(words, 2) || isCmNum(words,3) || isCmNum(words, 4))) {
 			int roomId = stoi(words[1]);
 			if (roomId < 0) { throw out_of_range("Minus"); }
 			int timeLength = stoi(words[2]);
@@ -500,7 +515,7 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 			vector<string>::iterator it = words.begin();
 			vector<string> nameList;
 			it += 4;
-			for (it; it == words.end(); ++it) {
+			for (; it == words.end(); ++it) {
 				if (people.find(*it) == people.end()) {
 					cerr << "No person with that name!" << endl;
 					return false;
@@ -537,8 +552,11 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 
 			//오늘
 			int _startTime = time+1;
+			if (_startTime < 9) {
+				_startTime = 9;
+			}
 			int _endTime = _startTime + timeLength;
-			for (; _endTime < 24; ++_startTime) {
+			for (; _endTime < 19; ++_startTime) {
 				_endTime = _startTime + timeLength;
 				if (!(roomPtr->second.isMeeting(day, _startTime, _endTime))) {	//비는 시간이 있다면
 					for (auto& name:nameList) {	//현재 참여 예정자들에 대해서
@@ -563,7 +581,7 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 			for (;!((wday > 6)||(count >= 3));++wday) {
 				int startTime = 9;
 				int endTime = startTime + timeLength;
-				for (; !((endTime > 23)||(count >= 3)); ++startTime) {
+				for (; ((endTime < 19)&&(count < 3)); ++startTime) {
 					endTime = startTime + timeLength;
 					if (!(roomPtr->second.isMeeting(DAY[wday], startTime, endTime))) {	//비는 시간이 있다면
 						for (auto& name : nameList) {	//현재 참여 예정자들에 대해서
@@ -583,7 +601,7 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 					hasMeeting = false;
 				}
 			}
-
+			//출력
 			cout << "Possible meeting time:" << endl;
 			if (count == 0) {
 				cout << "No possible meeting!\n";
@@ -603,8 +621,10 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 
 			string choice;
 			while (1) {
+				//for (auto& person : nameList) {
+				//	cout << person << endl;
+				//}
 				getline(cin, choice);
-
 				if (choice == "n") {
 					cout << "Command canceled" << endl;
 					break;

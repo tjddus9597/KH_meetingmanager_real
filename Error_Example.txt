@@ -50,6 +50,9 @@ Room 1002 added
 Enter a command : am 1002 M 10 12 Other_Stuff
 Meeting added at M 10
 ------------------------------------------------------
+Enter a command : am 1001 F 13 17 Strange_Stuff
+The maximum meeting time has been exceeded.
+------------------------------------------------------
 Enter a command : ap 1001 M 10 Shinhye
 Participation Shinhye added
 ------------------------------------------------------

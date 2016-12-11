@@ -1,6 +1,0 @@
-[MaximumMeetingTime 4]
-[People]
-<Person> Dongwon kang@dgist.ac.kr
-<Person> Shinhye park@dgist.ac.kr
-[Room 1002]
-No Meeting Exist

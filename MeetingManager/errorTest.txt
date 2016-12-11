@@ -1,6 +1,0 @@
-[People]
-<Person> Shinhye park@dgist.ac.kr
-[Room 1001]
-<Meeting> M 10 12 Silly_Stuff
-<Participation> Shinhye park@dgist.ac.kr
-<Meeting> M 14 16 Important_Stuff

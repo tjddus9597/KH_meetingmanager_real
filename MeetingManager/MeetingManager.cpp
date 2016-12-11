@@ -515,7 +515,7 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 			vector<string>::iterator it = words.begin();
 			vector<string> nameList;
 			it += 4;
-			for (it; it == words.end(); ++it) {
+			for (; it == words.end(); ++it) {
 				if (people.find(*it) == people.end()) {
 					cerr << "No person with that name!" << endl;
 					return false;
@@ -552,6 +552,9 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 
 			//¿À´Ã
 			int _startTime = time+1;
+			if (_startTime < 9) {
+				_startTime = 9;
+			}
 			int _endTime = _startTime + timeLength;
 			for (; _endTime < 19; ++_startTime) {
 				_endTime = _startTime + timeLength;
@@ -618,8 +621,10 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 
 			string choice;
 			while (1) {
+				//for (auto& person : nameList) {
+				//	cout << person << endl;
+				//}
 				getline(cin, choice);
-
 				if (choice == "n") {
 					cout << "Command canceled" << endl;
 					break;

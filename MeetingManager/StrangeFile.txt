@@ -1,4 +1,4 @@
-[MaximumMeetingTime 4]
+[MaximumMeetingTime2 4]
 [People]
 <Person> kim kim@naver.com
 [Room 1000]

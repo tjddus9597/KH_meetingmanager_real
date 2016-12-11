@@ -451,9 +451,6 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 				cout << "No room with that number!\n";
 				return false;
 			}
-			if (roomPtr->second.getMeeting(day, time).addParticipation(people, name)) {
-				return false;	// 오류 발생
-			}
 			for (auto roomElement : roomList) {
 				auto MeetingList = roomElement.second.getMeetingList();
 				for (auto MeetingPtr = MeetingList.begin(); MeetingPtr != MeetingList.end(); ++MeetingPtr) {
@@ -463,6 +460,9 @@ bool ap_insrtParticipation(vector<string>& words, unordered_map<int, Room>& room
 						return false;
 					}
 				}
+			}
+			if (roomPtr->second.getMeeting(day, time).addParticipation(people, name)) {
+				return false;	// 오류 발생
 			}
 			cout << "Participation "<< name << " added \n";
 		}

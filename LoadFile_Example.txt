@@ -1,0 +1,41 @@
+-------------------Start Scheduling-------------------
+
+1. Create a new file
+2. Load a file
+3. Quit the program
+Select the menu (1/2/3)? 2
+------------------------------------------------------
+Please enter the name of the saved file
+Name of the saved file : output2
+Maximum Meeting time is 3
+Person Shinhye added
+Person Soohyun added
+Room 1001 added
+Meeting added at M 10
+Participation Shinhye added
+Meeting added at M 14
+Room 1002 added
+Meeting added at M 10
+------------------------------------------------------
+Enter a command : ps
+Information for 2 rooms:
+--- Room 1001 ---
+Meeting time: M 10, Topic: Silly_Stuff
+Participatns:
+Shinhye
+Meeting time: M 14, Topic: Important_Stuff
+Participatns: None
+--- Room 1002 ---
+Meeting time: M 10, Topic: Other_Stuff
+Participatns: None
+------------------------------------------------------
+Enter a command : pa
+Persons : 2
+Meetings : 3
+Rooms : 2
+------------------------------------------------------
+Enter a command : qq
+All rooms are deleted
+All meetngs deleted
+All persons deleted
+Done

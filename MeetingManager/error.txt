@@ -1,0 +1,6 @@
+[MaximumMeetingTime 2]
+[People]
+<Person> hwang h
+<Person> kim k
+[Room 103]
+No Meeting Exist

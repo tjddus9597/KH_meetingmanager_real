@@ -515,7 +515,7 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 			vector<string>::iterator it = words.begin();
 			vector<string> nameList;
 			it += 4;
-			for (; it == words.end(); ++it) {
+			for (; it != words.end(); ++it) {
 				if (people.find(*it) == people.end()) {
 					cerr << "No person with that name!" << endl;
 					return false;

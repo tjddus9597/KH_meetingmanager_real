@@ -562,7 +562,7 @@ bool ag_addGroup(vector<string>& words, unordered_map<int,Room>& roomList, unord
 			++wday;
 			for (;!((wday > 6)||(count >= 3));++wday) {
 				int startTime = 9;
-				int endTime = 0;
+				int endTime = startTime + timeLength;
 				for (; !((endTime > 23)||(count >= 3)); ++startTime) {
 					endTime = startTime + timeLength;
 					if (!(roomPtr->second.isMeeting(DAY[wday], startTime, endTime))) {	//비는 시간이 있다면

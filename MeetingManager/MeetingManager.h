@@ -14,6 +14,8 @@
 
 bool simulation(unordered_map<int, Room>& roomList, unordered_map<string, Person>& people, int MaximumMeeting);
 inline bool isCmNum(vector<string>& words, int validNum);																		    //명령어 길이 확인 함수
+inline bool isDay(string& day);
+inline bool isTime(int time);
 bool qq_Quit(vector<string>& words, unordered_map<int, Room>& roomList, unordered_map<string, Person>& people);
 bool ar_insrtRoom(vector<string>& words, unordered_map<int, Room>& roomList);												 	    //ar 명령어 처리 함수
 bool am_insrtMeeting(vector<string>& words, unordered_map<int, Room>& roomList, int MaximumMeeting);								//am 명령어 처리 함수

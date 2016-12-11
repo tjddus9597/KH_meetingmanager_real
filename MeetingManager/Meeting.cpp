@@ -42,6 +42,7 @@ bool Meeting::addParticipation(unordered_map<string, Person>& People, string nam
 		return true;	// 오류 발생
 	}
 }
+
 //이미 존재하던 participation들을 받아오는 경우.
 void Meeting::acceptParticipation(unordered_map<string, Person>& newPar) {
 	m_Participation = newPar;
